@@ -225,87 +225,119 @@ export default function PortfolioPage() {
 
             {/* ── Subject Grid ── */}
             <div className="max-w-7xl mx-auto px-6 pb-24">
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    {visibleSubjects.map((subject) => (
-                        <motion.div
-                            key={subject.id}
-                            initial={{ opacity: 0, y: 20 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            viewport={{ once: true }}
-                            transition={{ duration: 0.5 }}
-                            onClick={() => openGallery(subject)}
-                            className="group relative cursor-pointer"
-                        >
-                            <div className="relative aspect-[4/5] overflow-hidden rounded-sm">
-                                <Image
-                                    src={subject.coverImage}
-                                    alt={subject.name}
-                                    fill
-                                    className="object-cover transition-transform duration-700 group-hover:scale-110"
-                                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                                />
-                                <div className="absolute inset-0 bg-gradient-to-t from-[#0F0F0F] via-[#0F0F0F]/20 to-transparent opacity-60 group-hover:opacity-80 transition-opacity duration-500" />
-
-                                <div className="absolute bottom-6 left-6 right-6">
-                                    <p className="text-gold text-[10px] tracking-[0.3em] uppercase mb-2">
+                <motion.div layout className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <AnimatePresence mode="popLayout">
+                        {visibleSubjects.map((subject) => (
+                            <motion.div
+                                key={subject.id}
+                                layout
+                                initial={{ opacity: 0, scale: 0.95 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                exit={{ opacity: 0, scale: 0.9 }}
+                                transition={{ duration: 0.35 }}
+                                className="group relative cursor-pointer overflow-hidden rounded-sm border border-[var(--color-border)] hover:border-gold/40 transition-colors"
+                                onClick={() => openGallery(subject)}
+                            >
+                                {/* Category badge (shown in "All" view) */}
+                                {activeCategory === "All" && (
+                                    <span className="absolute top-3 left-3 z-10 text-[9px] tracking-widest uppercase bg-black/60 text-gold border border-gold/30 px-2 py-0.5 rounded-full">
                                         {subject.categoryLabel}
-                                    </p>
-                                    <h3 className="font-serif text-2xl text-white mb-1">{subject.name}</h3>
-                                    <p className="text-[var(--color-muted)] text-[12px] tracking-wide">
-                                        {subject.location}
+                                    </span>
+                                )}
+
+                                {/* Cover image */}
+                                <div className="relative h-72">
+                                    <Image
+                                        src={subject.coverImage}
+                                        alt={subject.name}
+                                        fill
+                                        className="object-cover group-hover:scale-105 transition-transform duration-700"
+                                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                                    />
+                                    <div className="absolute inset-0 bg-gradient-to-t from-black via-black/70 to-black/10" />
+                                </div>
+
+                                {/* Name + location overlay */}
+                                <div className="absolute bottom-0 left-0 right-0 p-5">
+                                    <p className="font-serif text-base text-white leading-snug">{subject.name}</p>
+                                    <p className="text-[10px] text-gold mt-1 tracking-wide">{subject.location}</p>
+                                    <p className="text-[10px] text-white/40 mt-0.5">
+                                        {subject.images.length} photos · tap to view
                                     </p>
                                 </div>
 
-                                <div className="absolute top-6 right-6 opacity-0 group-hover:opacity-100 transition-opacity duration-500 transform translate-x-4 group-hover:translate-x-0">
-                                    <div className="w-10 h-10 rounded-full border border-gold/50 flex items-center justify-center text-gold backdrop-blur-sm">
-                                        <ChevronRight size={20} />
-                                    </div>
-                                </div>
-                            </div>
-                        </motion.div>
-                    ))}
-                </div>
+                                {/* Hover ring */}
+                                <div className="absolute inset-0 ring-1 ring-inset ring-gold/0 group-hover:ring-gold/30 transition-all duration-300 rounded-sm" />
+                            </motion.div>
+                        ))}
+                    </AnimatePresence>
+                </motion.div>
             </div>
 
-            {/* ── Lightbox Gallery ── */}
+            {/* ── Gallery Lightbox ── */}
             <AnimatePresence>
                 {activeSubject && (
                     <motion.div
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
-                        className="fixed inset-0 z-[100] bg-[#0F0F0F]/fb flex flex-col pt-10"
+                        className="fixed inset-0 z-50 bg-black/97 flex flex-col"
+                        onClick={closeGallery}
                     >
-                        {/* Lightbox Header */}
-                        <div className="flex justify-between items-center px-8 h-20">
-                            <div>
-                                <h2 className="font-serif text-2xl text-white">{activeSubject.name}</h2>
-                                <p className="text-gold text-[10px] tracking-[0.3em] uppercase mt-1">
-                                    {activeSubject.categoryLabel} · {activeSubject.location}
-                                </p>
-                            </div>
+                        {/* Top bar */}
+                        <div
+                            className="flex items-center justify-between px-6 pt-6 pb-4 flex-shrink-0"
+                            onClick={(e) => e.stopPropagation()}
+                        >
                             <button
                                 onClick={closeGallery}
-                                className="w-12 h-12 rounded-full border border-white/20 flex items-center justify-center text-white hover:border-gold hover:text-gold transition-all"
+                                className="flex items-center gap-1.5 text-sm text-white/60 hover:text-gold transition-colors"
                             >
-                                <X size={24} />
+                                <ArrowLeft size={16} />
+                                <span className="tracking-wide uppercase text-[11px]">Back</span>
+                            </button>
+
+                            <div className="text-center">
+                                <p className="font-serif text-base text-white">{activeSubject.name}</p>
+                                <p className="text-[10px] text-gold tracking-wide">{activeSubject.location}</p>
+                            </div>
+
+                            <button
+                                className="text-white/60 hover:text-gold transition-colors"
+                                onClick={closeGallery}
+                            >
+                                <X size={22} />
                             </button>
                         </div>
 
-                        {/* Main Image Area */}
-                        <div className="flex-1 relative flex items-center justify-center px-10">
+                        {/* Main image area */}
+                        <div
+                            className="flex-1 relative flex items-center justify-center px-16 min-h-0"
+                            onClick={(e) => e.stopPropagation()}
+                        >
+                            {/* Prev arrow */}
+                            {activeSubject.images.length > 1 && (
+                                <button
+                                    onClick={prevImage}
+                                    className="absolute left-4 z-10 w-10 h-10 flex items-center justify-center rounded-full border border-white/20 text-white/70 hover:border-gold hover:text-gold transition-all duration-200"
+                                >
+                                    <ChevronLeft size={20} />
+                                </button>
+                            )}
+
+                            {/* Image */}
                             <AnimatePresence mode="wait">
                                 <motion.div
                                     key={galleryIndex}
-                                    initial={{ opacity: 0, scale: 0.95 }}
-                                    animate={{ opacity: 1, scale: 1 }}
-                                    exit={{ opacity: 0, scale: 1.05 }}
-                                    transition={{ duration: 0.4 }}
-                                    className="relative w-full h-full max-h-[75vh]"
+                                    initial={{ opacity: 0, x: 30 }}
+                                    animate={{ opacity: 1, x: 0 }}
+                                    exit={{ opacity: 0, x: -30 }}
+                                    transition={{ duration: 0.28 }}
+                                    className="relative w-full h-full max-h-[70vh]"
                                 >
                                     <Image
                                         src={activeSubject.images[galleryIndex]}
-                                        alt={`${activeSubject.name} Gallery ${galleryIndex + 1}`}
+                                        alt={`${activeSubject.name} – photo ${galleryIndex + 1}`}
                                         fill
                                         className="object-contain"
                                         sizes="90vw"
@@ -314,56 +346,52 @@ export default function PortfolioPage() {
                                 </motion.div>
                             </AnimatePresence>
 
-                            {/* Nav Buttons */}
-                            <button
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                    prevImage();
-                                }}
-                                className="absolute left-6 w-14 h-14 rounded-full bg-white/5 backdrop-blur-md flex items-center justify-center text-white border border-white/10 hover:bg-gold/20 hover:border-gold hover:text-gold transition-all"
-                            >
-                                <ChevronLeft size={28} />
-                            </button>
-                            <button
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                    nextImage();
-                                }}
-                                className="absolute right-6 w-14 h-14 rounded-full bg-white/5 backdrop-blur-md flex items-center justify-center text-white border border-white/10 hover:bg-gold/20 hover:border-gold hover:text-gold transition-all"
-                            >
-                                <ChevronRight size={28} />
-                            </button>
+                            {/* Next arrow */}
+                            {activeSubject.images.length > 1 && (
+                                <button
+                                    onClick={nextImage}
+                                    className="absolute right-4 z-10 w-10 h-10 flex items-center justify-center rounded-full border border-white/20 text-white/70 hover:border-gold hover:text-gold transition-all duration-200"
+                                >
+                                    <ChevronRight size={20} />
+                                </button>
+                            )}
                         </div>
 
-                        {/* Thumbnail Strip */}
-                        <div className="h-24 flex justify-center items-center gap-3 pb-8 px-6">
-                            {activeSubject.images.map((img, idx) => (
-                                <button
-                                    key={idx}
-                                    onClick={() => setGalleryIndex(idx)}
-                                    className={`relative h-14 aspect-square overflow-hidden rounded-sm transition-all duration-300 ${galleryIndex === idx ? "ring-2 ring-gold scale-110 z-10" : "opacity-40 hover:opacity-100"
-                                        }`}
-                                >
-                                    <Image src={img} alt="Thumb" fill className="object-cover" sizes="60px" />
-                                </button>
-                            ))}
+                        {/* Footer: counter + thumbnail strip */}
+                        <div
+                            className="flex-shrink-0 pb-8 pt-4 flex flex-col items-center gap-3"
+                            onClick={(e) => e.stopPropagation()}
+                        >
+                            {/* Counter */}
+                            <p className="text-[11px] tracking-widest text-white/40 uppercase">
+                                {galleryIndex + 1} / {activeSubject.images.length}
+                            </p>
+
+                            {/* Thumbnail strip */}
+                            <div className="flex gap-2 overflow-x-auto px-4 max-w-full">
+                                {activeSubject.images.map((img, idx) => (
+                                    <button
+                                        key={idx}
+                                        onClick={() => setGalleryIndex(idx)}
+                                        className={`flex-shrink-0 relative w-12 h-12 rounded-sm overflow-hidden border-2 transition-all duration-200 ${idx === galleryIndex
+                                            ? "border-gold"
+                                            : "border-white/10 opacity-50 hover:opacity-80"
+                                            }`}
+                                    >
+                                        <Image
+                                            src={img}
+                                            alt={`thumb ${idx + 1}`}
+                                            fill
+                                            className="object-cover"
+                                            sizes="48px"
+                                        />
+                                    </button>
+                                ))}
+                            </div>
                         </div>
                     </motion.div>
                 )}
             </AnimatePresence>
-
-            {/* ── Footer Link ── */}
-            <section className="bg-[var(--color-surface)] py-20 px-6 border-t border-[var(--color-border)]">
-                <div className="max-w-4xl mx-auto text-center">
-                    <h2 className="font-serif text-3xl text-white mb-6">Ready to create your own story?</h2>
-                    <Link
-                        href="/#contact"
-                        className="inline-block py-4 px-10 bg-gold text-[#0D1B3E] text-[12px] font-bold tracking-[0.2em] uppercase rounded-sm hover:shadow-[0_0_40px_rgba(245,166,35,0.4)] transition-all"
-                    >
-                        Check Availability
-                    </Link>
-                </div>
-            </section>
         </>
     );
 }
