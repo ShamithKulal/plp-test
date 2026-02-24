@@ -11,7 +11,6 @@ const navLinks = [
     { label: "Weddings", href: "/wedding-photography-udupi" },
     { label: "Pre-Wedding", href: "/pre-wedding-shoot" },
     { label: "Haldi & Mehendi", href: "/haldi-mehendi" },
-    { label: "Corporate", href: "/corporate-events" },
     { label: "Portfolio", href: "/portfolio" },
     { label: "About", href: "/about" },
     { label: "Blog", href: "/blog" },
@@ -37,6 +36,21 @@ export default function Navbar() {
 
     return (
         <>
+            {/* Top gradient: darkens hero image tops so nav text is always readable */}
+            {!scrolled && (
+                <div
+                    style={{
+                        position: "fixed",
+                        top: 0,
+                        left: 0,
+                        right: 0,
+                        height: "120px",
+                        background: "linear-gradient(to bottom, rgba(0,0,0,0.55) 0%, transparent 100%)",
+                        zIndex: 49,
+                        pointerEvents: "none",
+                    }}
+                />
+            )}
             {/* Scoped responsive styles */}
             <style>{`
         .plp-nav-desktop { display: none; }
@@ -47,7 +61,7 @@ export default function Navbar() {
           .plp-nav-hamburger { display: none; }
           .plp-nav-cta { display: inline-flex; }
         }
-        .plp-nav-link { font-size: 11px; letter-spacing: 0.12em; color: #7A95C9; text-decoration: none; text-transform: uppercase; transition: color 0.3s; }
+        .plp-nav-link { font-size: 11px; letter-spacing: 0.12em; color: #ffffff; text-decoration: none; text-transform: uppercase; transition: color 0.3s; }
         .plp-nav-link:hover { color: #fff; }
         .plp-cta-btn { padding: 10px 20px; font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; font-weight: 600; border: 1px solid #F5A623; color: #F5A623; text-decoration: none; border-radius: 2px; transition: background 0.3s, color 0.3s; }
         .plp-cta-btn:hover { background: #F5A623; color: #0D1B3E; }
@@ -64,7 +78,7 @@ export default function Navbar() {
                     background: scrolled ? "rgba(13,27,62,0.88)" : "transparent",
                     backdropFilter: scrolled ? "blur(20px)" : "none",
                     WebkitBackdropFilter: scrolled ? "blur(20px)" : "none",
-                    borderBottom: scrolled ? "1px solid rgba(245,166,35,0.15)" : "none",
+                    borderBottom: scrolled ? "1px solid rgba(245,166,35,0.15)" : "1px solid transparent",
                     padding: scrolled ? "10px 0" : "18px 0",
                 }}
             >

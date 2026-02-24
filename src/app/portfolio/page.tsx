@@ -202,35 +202,6 @@ const portfolioData: CategoryData[] = [
             },
         ],
     },
-    {
-        label: "Corporate",
-        subjects: [
-            {
-                id: 13,
-                name: "Annual Tech Summit",
-                location: "Hotel Moti Mahal, Mangalore",
-                coverImage: "/hero-wedding.jpg",
-                images: [
-                    "/hero-wedding.jpg",
-                    "/prewedding-hero.jpg",
-                    "/hero-wedding.jpg",
-                    "/prewedding-hero.jpg",
-                    "/hero-wedding.jpg",
-                ],
-            },
-            {
-                id: 14,
-                name: "Product Launch 2024",
-                location: "Goldfinch Hotel, Mangalore",
-                coverImage: "/prewedding-hero.jpg",
-                images: [
-                    "/prewedding-hero.jpg",
-                    "/hero-wedding.jpg",
-                    "/prewedding-hero.jpg",
-                ],
-            },
-        ],
-    },
 ];
 
 const ALL_CATEGORIES = ["All", ...portfolioData.map((c) => c.label)];

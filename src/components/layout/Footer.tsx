@@ -10,7 +10,6 @@ const serviceLinks = [
     { label: "Wedding Photography – Mangalore", href: "/wedding-photography-mangalore" },
     { label: "Pre-Wedding Shoot", href: "/pre-wedding-shoot" },
     { label: "Haldi & Mehendi", href: "/haldi-mehendi" },
-    { label: "Corporate Events", href: "/corporate-events" },
 ];
 
 const companyLinks = [

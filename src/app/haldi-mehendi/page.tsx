@@ -12,7 +12,7 @@ export default function HaldiMehendiPage() {
     return (
         <>
             <section className="relative pt-32 pb-20 min-h-[60vh] flex items-end overflow-hidden">
-                <Image src="/hero-wedding.jpg" alt="Haldi mehendi ceremony photography" fill priority className="object-cover object-top" sizes="100vw" />
+                <Image src="/haldi-mehandi/poojitha-haldi/IMG_6441_3_11zon.jpg" alt="Haldi mehendi ceremony photography" fill priority className="object-cover object-top" sizes="100vw" />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-black/10" />
                 <div className="relative z-10 max-w-4xl mx-auto px-6 pb-12">
                     <p className="text-[11px] tracking-[0.4em] uppercase text-gold mb-4">Pre-Wedding Traditions</p>

@@ -28,7 +28,6 @@ const eventTypes = [
     "Pre-Wedding Shoot",
     "Haldi & Mehendi",
     "Reception",
-    "Corporate Event",
     "Other",
 ];
 
