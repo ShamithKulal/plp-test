@@ -3,7 +3,6 @@
 import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { ChevronDown } from "lucide-react";
 
 export default function HeroSection() {
     return (
@@ -171,33 +170,6 @@ export default function HeroSection() {
                 </motion.div>
             </div>
 
-            {/* Scroll indicator */}
-            <motion.div
-                style={{
-                    position: "absolute",
-                    bottom: "40px",
-                    left: "50%",
-                    transform: "translateX(-50%)",
-                    color: "rgba(255,255,255,0.45)",
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                    gap: "4px",
-                }}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 2 }}
-            >
-                <span style={{ fontSize: "10px", letterSpacing: "0.3em", textTransform: "uppercase" }}>
-                    Scroll
-                </span>
-                <motion.div
-                    animate={{ y: [0, 6, 0] }}
-                    transition={{ repeat: Infinity, duration: 1.5 }}
-                >
-                    <ChevronDown size={16} />
-                </motion.div>
-            </motion.div>
         </section>
     );
 }
