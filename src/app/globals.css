@@ -1,0 +1,146 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    /* ── Brand: Deep Midnight Navy + Lamp Amber ── */
+    --color-bg: #0D1B3E;
+    --color-amber: #F5A623;
+    --color-amber-light: #F9BA3A;
+    --color-amber-dark: #D4880F;
+    --color-text: #FFFFFF;
+    --color-muted: #7A95C9;
+    --color-surface: #112055;
+    --color-surface-2: #162870;
+    --color-border: #1E3170;
+    --color-border-light: #2A4494;
+    /* Lamp glow rgba for use in inline styles */
+    --color-glow: rgba(245, 166, 35, 0.18);
+    --color-glow-strong: rgba(245, 166, 35, 0.35);
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: var(--color-bg);
+    color: var(--color-text);
+    font-family: var(--font-inter), system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-playfair), Georgia, serif;
+    letter-spacing: -0.02em;
+  }
+}
+
+@layer utilities {
+
+  /* ── Color aliases ── */
+  .text-gold {
+    color: var(--color-amber);
+  }
+
+  .bg-gold {
+    background-color: var(--color-amber);
+  }
+
+  .border-gold {
+    border-color: var(--color-amber);
+  }
+
+  .bg-surface {
+    background-color: var(--color-surface);
+  }
+
+  .text-muted {
+    color: var(--color-muted);
+  }
+
+  .font-serif {
+    font-family: var(--font-playfair), Georgia, serif;
+  }
+
+  /* ── Lamp amber gradients ── */
+  .gold-gradient {
+    background: linear-gradient(135deg, #F5A623 0%, #F9BA3A 50%, #D4880F 100%);
+  }
+
+  .gold-text-gradient {
+    background: linear-gradient(135deg, #F5A623 0%, #F9BA3A 50%, #D4880F 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* ── Lamp glow radial effect (the signature motif) ── */
+  .lamp-glow {
+    position: relative;
+  }
+
+  .lamp-glow::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 70% 50% at 50% -10%, rgba(245, 166, 35, 0.22) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* Amber glow box-shadow for cards */
+  .glow-border {
+    box-shadow: 0 0 0 1px rgba(245, 166, 35, 0.35), 0 0 24px rgba(245, 166, 35, 0.12);
+  }
+
+  /* ── Glassmorphism navbar (navy-tinted) ── */
+  .glass {
+    background: rgba(13, 27, 62, 0.72);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(245, 166, 35, 0.12);
+  }
+
+  /* ── Section spacing ── */
+  .section-padding {
+    padding-top: 6rem;
+    padding-bottom: 6rem;
+  }
+
+  @media (min-width: 768px) {
+    .section-padding {
+      padding-top: 8rem;
+      padding-bottom: 8rem;
+    }
+  }
+}
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar {
+  width: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-bg);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-amber);
+  border-radius: 2px;
+}
+
+/* ── Selection ── */
+::selection {
+  background: rgba(245, 166, 35, 0.28);
+  color: #fff;
+}
