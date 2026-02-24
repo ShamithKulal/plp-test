@@ -49,7 +49,7 @@ export default function HeroSection() {
             opacity: 1,
             y: 0,
             filter: "blur(0px)",
-            transition: { duration: 0.75, delay: 0.3 + i * 0.18, ease: [0.22, 1, 0.36, 1] },
+            transition: { duration: 0.75, delay: 0.3 + i * 0.18, ease: [0.22, 1, 0.36, 1] as const },
         }),
     };
 
