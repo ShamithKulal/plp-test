@@ -1,45 +1,249 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
-import { X } from "lucide-react";
+import { X, ChevronLeft, ChevronRight, ArrowLeft } from "lucide-react";
 
-const categories = ["All", "Wedding", "Pre-Wedding", "Haldi & Mehendi", "Corporate"];
+// ─── Data ────────────────────────────────────────────────────────────────────
 
-const portfolioItems = [
-    { id: 1, category: "Wedding", image: "/hero-wedding.jpg", title: "Priya & Kiran's Wedding", location: "Manipal County Club, Udupi" },
-    { id: 2, category: "Pre-Wedding", image: "/prewedding-hero.jpg", title: "Coastal Romance", location: "Malpe Beach, Udupi" },
-    { id: 3, category: "Wedding", image: "/hero-wedding.jpg", title: "Royal Celebration", location: "Blue Waters, Mangalore" },
-    { id: 4, category: "Haldi & Mehendi", image: "/prewedding-hero.jpg", title: "Golden Haldi Morning", location: "Udupi" },
-    { id: 5, category: "Corporate", image: "/hero-wedding.jpg", title: "Annual Tech Summit", location: "Hotel Moti Mahal, Mangalore" },
-    { id: 6, category: "Pre-Wedding", image: "/prewedding-hero.jpg", title: "Sunset at Kaup", location: "Kaup Lighthouse, Udupi" },
-    { id: 7, category: "Wedding", image: "/hero-wedding.jpg", title: "Temple Wedding", location: "Durgaparameshwari Temple" },
-    { id: 8, category: "Haldi & Mehendi", image: "/prewedding-hero.jpg", title: "Mehendi Moments", location: "Mangalore" },
-    { id: 9, category: "Wedding", image: "/hero-wedding.jpg", title: "Beachside Reception", location: "Pilikula Grounds, Mangalore" },
+type Subject = {
+    id: number;
+    name: string;
+    location: string;
+    coverImage: string;
+    images: string[];
+};
+
+type CategoryData = {
+    label: string;
+    subjects: Subject[];
+};
+
+const portfolioData: CategoryData[] = [
+    {
+        label: "Wedding",
+        subjects: [
+            {
+                id: 1,
+                name: "Priya & Kiran",
+                location: "Manipal County Club, Udupi",
+                coverImage: "/hero-wedding.jpg",
+                images: [
+                    "/hero-wedding.jpg",
+                    "/prewedding-hero.jpg",
+                    "/hero-wedding.jpg",
+                    "/prewedding-hero.jpg",
+                    "/hero-wedding.jpg",
+                ],
+            },
+            {
+                id: 2,
+                name: "Divya & Rahul",
+                location: "Blue Waters, Mangalore",
+                coverImage: "/prewedding-hero.jpg",
+                images: [
+                    "/prewedding-hero.jpg",
+                    "/hero-wedding.jpg",
+                    "/prewedding-hero.jpg",
+                    "/hero-wedding.jpg",
+                ],
+            },
+            {
+                id: 3,
+                name: "Sneha & Arjun",
+                location: "Durgaparameshwari Temple",
+                coverImage: "/hero-wedding.jpg",
+                images: [
+                    "/hero-wedding.jpg",
+                    "/hero-wedding.jpg",
+                    "/prewedding-hero.jpg",
+                    "/prewedding-hero.jpg",
+                    "/hero-wedding.jpg",
+                    "/prewedding-hero.jpg",
+                ],
+            },
+            {
+                id: 4,
+                name: "Ananya & Vikram",
+                location: "Pilikula Grounds, Mangalore",
+                coverImage: "/prewedding-hero.jpg",
+                images: [
+                    "/prewedding-hero.jpg",
+                    "/hero-wedding.jpg",
+                    "/hero-wedding.jpg",
+                    "/prewedding-hero.jpg",
+                ],
+            },
+        ],
+    },
+    {
+        label: "Pre-Wedding",
+        subjects: [
+            {
+                id: 5,
+                name: "Coastal Romance",
+                location: "Malpe Beach, Udupi",
+                coverImage: "/prewedding-hero.jpg",
+                images: [
+                    "/prewedding-hero.jpg",
+                    "/hero-wedding.jpg",
+                    "/prewedding-hero.jpg",
+                    "/hero-wedding.jpg",
+                    "/prewedding-hero.jpg",
+                ],
+            },
+            {
+                id: 6,
+                name: "Sunset at Kaup",
+                location: "Kaup Lighthouse, Udupi",
+                coverImage: "/hero-wedding.jpg",
+                images: [
+                    "/hero-wedding.jpg",
+                    "/prewedding-hero.jpg",
+                    "/hero-wedding.jpg",
+                    "/prewedding-hero.jpg",
+                ],
+            },
+            {
+                id: 7,
+                name: "Golden Hour",
+                location: "Mangalore Coastline",
+                coverImage: "/prewedding-hero.jpg",
+                images: [
+                    "/prewedding-hero.jpg",
+                    "/hero-wedding.jpg",
+                    "/prewedding-hero.jpg",
+                ],
+            },
+        ],
+    },
+    {
+        label: "Haldi & Mehendi",
+        subjects: [
+            {
+                id: 8,
+                name: "Golden Haldi Morning",
+                location: "Udupi",
+                coverImage: "/prewedding-hero.jpg",
+                images: [
+                    "/prewedding-hero.jpg",
+                    "/hero-wedding.jpg",
+                    "/prewedding-hero.jpg",
+                    "/hero-wedding.jpg",
+                ],
+            },
+            {
+                id: 9,
+                name: "Mehendi Moments",
+                location: "Mangalore",
+                coverImage: "/hero-wedding.jpg",
+                images: [
+                    "/hero-wedding.jpg",
+                    "/prewedding-hero.jpg",
+                    "/hero-wedding.jpg",
+                ],
+            },
+        ],
+    },
+    {
+        label: "Corporate",
+        subjects: [
+            {
+                id: 10,
+                name: "Annual Tech Summit",
+                location: "Hotel Moti Mahal, Mangalore",
+                coverImage: "/hero-wedding.jpg",
+                images: [
+                    "/hero-wedding.jpg",
+                    "/prewedding-hero.jpg",
+                    "/hero-wedding.jpg",
+                    "/prewedding-hero.jpg",
+                    "/hero-wedding.jpg",
+                ],
+            },
+            {
+                id: 11,
+                name: "Product Launch 2024",
+                location: "Goldfinch Hotel, Mangalore",
+                coverImage: "/prewedding-hero.jpg",
+                images: [
+                    "/prewedding-hero.jpg",
+                    "/hero-wedding.jpg",
+                    "/prewedding-hero.jpg",
+                ],
+            },
+        ],
+    },
 ];
 
-export default function PortfolioPage() {
-    const [active, setActive] = useState("All");
-    const [lightbox, setLightbox] = useState<null | (typeof portfolioItems)[0]>(null);
+const ALL_CATEGORIES = ["All", ...portfolioData.map((c) => c.label)];
 
-    const filtered = active === "All" ? portfolioItems : portfolioItems.filter((i) => i.category === active);
+// ─── Component ────────────────────────────────────────────────────────────────
+
+export default function PortfolioPage() {
+    const [activeCategory, setActiveCategory] = useState("All");
+    const [activeSubject, setActiveSubject] = useState<(Subject & { categoryLabel: string }) | null>(null);
+    const [galleryIndex, setGalleryIndex] = useState(0);
+
+    // Subjects visible in the current category view
+    const visibleSubjects =
+        activeCategory === "All"
+            ? portfolioData.flatMap((cat) =>
+                cat.subjects.map((s) => ({ ...s, categoryLabel: cat.label }))
+            )
+            : portfolioData
+                .find((c) => c.label === activeCategory)
+                ?.subjects.map((s) => ({ ...s, categoryLabel: activeCategory })) ?? [];
+
+    // Gallery navigation
+    const openGallery = (subject: Subject & { categoryLabel: string }) => {
+        setActiveSubject(subject);
+        setGalleryIndex(0);
+    };
+
+    const closeGallery = () => setActiveSubject(null);
+
+    const prevImage = useCallback(() => {
+        if (!activeSubject) return;
+        setGalleryIndex((i) => (i - 1 + activeSubject.images.length) % activeSubject.images.length);
+    }, [activeSubject]);
+
+    const nextImage = useCallback(() => {
+        if (!activeSubject) return;
+        setGalleryIndex((i) => (i + 1) % activeSubject.images.length);
+    }, [activeSubject]);
+
+    // Keyboard navigation
+    useEffect(() => {
+        if (!activeSubject) return;
+        const handler = (e: KeyboardEvent) => {
+            if (e.key === "ArrowLeft") prevImage();
+            if (e.key === "ArrowRight") nextImage();
+            if (e.key === "Escape") closeGallery();
+        };
+        window.addEventListener("keydown", handler);
+        return () => window.removeEventListener("keydown", handler);
+    }, [activeSubject, prevImage, nextImage]);
 
     return (
         <>
+            {/* ── Header ── */}
             <section className="pt-32 pb-8 text-center px-6">
                 <p className="text-[11px] tracking-[0.4em] uppercase text-gold mb-3">Our Work</p>
                 <h1 className="font-serif text-5xl md:text-6xl text-[var(--color-text)] mb-4">Portfolio</h1>
-                <p className="text-[var(--color-muted)] max-w-md mx-auto text-sm">A curated collection of moments that define Paperlight Productions.</p>
+                <p className="text-[var(--color-muted)] max-w-md mx-auto text-sm">
+                    A curated collection of moments that define Paperlight Productions.
+                </p>
             </section>
 
-            {/* Filter Tabs */}
+            {/* ── Category Tabs ── */}
             <div className="flex flex-wrap gap-2 justify-center px-6 mb-10">
-                {categories.map((cat) => (
+                {ALL_CATEGORIES.map((cat) => (
                     <button
                         key={cat}
-                        onClick={() => setActive(cat)}
-                        className={`px-5 py-2 text-[12px] tracking-wider uppercase rounded-full border transition-all duration-300 ${active === cat
+                        onClick={() => setActiveCategory(cat)}
+                        className={`px-5 py-2 text-[12px] tracking-wider uppercase rounded-full border transition-all duration-300 ${activeCategory === cat
                                 ? "bg-gold text-[#0F0F0F] border-gold font-semibold"
                                 : "border-[var(--color-border)] text-[var(--color-muted)] hover:border-gold hover:text-gold"
                             }`}
@@ -49,63 +253,172 @@ export default function PortfolioPage() {
                 ))}
             </div>
 
-            {/* Masonry Grid */}
+            {/* ── Subject Grid ── */}
             <div className="max-w-7xl mx-auto px-6 pb-24">
-                <motion.div layout className="columns-1 sm:columns-2 lg:columns-3 gap-4 space-y-4">
+                <motion.div layout className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                     <AnimatePresence mode="popLayout">
-                        {filtered.map((item) => (
+                        {visibleSubjects.map((subject) => (
                             <motion.div
-                                key={item.id}
+                                key={subject.id}
                                 layout
                                 initial={{ opacity: 0, scale: 0.95 }}
                                 animate={{ opacity: 1, scale: 1 }}
                                 exit={{ opacity: 0, scale: 0.9 }}
                                 transition={{ duration: 0.35 }}
-                                className="break-inside-avoid group relative cursor-pointer overflow-hidden rounded-sm border border-[var(--color-border)] hover:border-gold/40 transition-colors"
-                                onClick={() => setLightbox(item)}
+                                className="group relative cursor-pointer overflow-hidden rounded-sm border border-[var(--color-border)] hover:border-gold/40 transition-colors"
+                                onClick={() => openGallery(subject)}
                             >
-                                <div className="relative h-64 sm:h-72">
-                                    <Image src={item.image} alt={item.title} fill className="object-cover group-hover:scale-105 transition-transform duration-700" sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw" />
-                                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-400" />
-                                    <div className="absolute bottom-0 left-0 right-0 p-4 translate-y-4 group-hover:translate-y-0 opacity-0 group-hover:opacity-100 transition-all duration-400">
-                                        <p className="font-serif text-sm text-white">{item.title}</p>
-                                        <p className="text-[10px] text-gold mt-0.5">{item.location}</p>
-                                    </div>
+                                {/* Category badge (shown in "All" view) */}
+                                {activeCategory === "All" && (
+                                    <span className="absolute top-3 left-3 z-10 text-[9px] tracking-widest uppercase bg-black/60 text-gold border border-gold/30 px-2 py-0.5 rounded-full">
+                                        {subject.categoryLabel}
+                                    </span>
+                                )}
+
+                                {/* Cover image */}
+                                <div className="relative h-72">
+                                    <Image
+                                        src={subject.coverImage}
+                                        alt={subject.name}
+                                        fill
+                                        className="object-cover group-hover:scale-105 transition-transform duration-700"
+                                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                                    />
+                                    <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/10 to-transparent" />
                                 </div>
+
+                                {/* Name + location overlay */}
+                                <div className="absolute bottom-0 left-0 right-0 p-5">
+                                    <p className="font-serif text-base text-white leading-snug">{subject.name}</p>
+                                    <p className="text-[10px] text-gold mt-1 tracking-wide">{subject.location}</p>
+                                    <p className="text-[10px] text-white/40 mt-0.5">
+                                        {subject.images.length} photos · tap to view
+                                    </p>
+                                </div>
+
+                                {/* Hover ring */}
+                                <div className="absolute inset-0 ring-1 ring-inset ring-gold/0 group-hover:ring-gold/30 transition-all duration-300 rounded-sm" />
                             </motion.div>
                         ))}
                     </AnimatePresence>
                 </motion.div>
             </div>
 
-            {/* Lightbox */}
+            {/* ── Gallery Lightbox ── */}
             <AnimatePresence>
-                {lightbox && (
+                {activeSubject && (
                     <motion.div
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
-                        className="fixed inset-0 z-50 bg-black/95 flex items-center justify-center p-4"
-                        onClick={() => setLightbox(null)}
+                        className="fixed inset-0 z-50 bg-black/97 flex flex-col"
+                        onClick={closeGallery}
                     >
-                        <button className="absolute top-6 right-6 text-white hover:text-gold transition-colors" onClick={() => setLightbox(null)}>
-                            <X size={28} />
-                        </button>
-                        <motion.div
-                            initial={{ scale: 0.8, opacity: 0 }}
-                            animate={{ scale: 1, opacity: 1 }}
-                            exit={{ scale: 0.8, opacity: 0 }}
-                            className="relative max-w-3xl w-full max-h-[80vh]"
+                        {/* Top bar */}
+                        <div
+                            className="flex items-center justify-between px-6 pt-6 pb-4 flex-shrink-0"
                             onClick={(e) => e.stopPropagation()}
                         >
-                            <div className="relative h-[80vh]">
-                                <Image src={lightbox.image} alt={lightbox.title} fill className="object-contain" sizes="90vw" />
+                            <button
+                                onClick={closeGallery}
+                                className="flex items-center gap-1.5 text-sm text-white/60 hover:text-gold transition-colors"
+                            >
+                                <ArrowLeft size={16} />
+                                <span className="tracking-wide uppercase text-[11px]">Back</span>
+                            </button>
+
+                            <div className="text-center">
+                                <p className="font-serif text-base text-white">{activeSubject.name}</p>
+                                <p className="text-[10px] text-gold tracking-wide">{activeSubject.location}</p>
                             </div>
-                            <div className="mt-4 text-center">
-                                <p className="font-serif text-lg text-white">{lightbox.title}</p>
-                                <p className="text-xs text-gold mt-1">{lightbox.location}</p>
+
+                            <button
+                                className="text-white/60 hover:text-gold transition-colors"
+                                onClick={closeGallery}
+                            >
+                                <X size={22} />
+                            </button>
+                        </div>
+
+                        {/* Main image area */}
+                        <div
+                            className="flex-1 relative flex items-center justify-center px-16 min-h-0"
+                            onClick={(e) => e.stopPropagation()}
+                        >
+                            {/* Prev arrow */}
+                            {activeSubject.images.length > 1 && (
+                                <button
+                                    onClick={prevImage}
+                                    className="absolute left-4 z-10 w-10 h-10 flex items-center justify-center rounded-full border border-white/20 text-white/70 hover:border-gold hover:text-gold transition-all duration-200"
+                                >
+                                    <ChevronLeft size={20} />
+                                </button>
+                            )}
+
+                            {/* Image */}
+                            <AnimatePresence mode="wait">
+                                <motion.div
+                                    key={galleryIndex}
+                                    initial={{ opacity: 0, x: 30 }}
+                                    animate={{ opacity: 1, x: 0 }}
+                                    exit={{ opacity: 0, x: -30 }}
+                                    transition={{ duration: 0.28 }}
+                                    className="relative w-full h-full max-h-[70vh]"
+                                >
+                                    <Image
+                                        src={activeSubject.images[galleryIndex]}
+                                        alt={`${activeSubject.name} – photo ${galleryIndex + 1}`}
+                                        fill
+                                        className="object-contain"
+                                        sizes="90vw"
+                                        priority
+                                    />
+                                </motion.div>
+                            </AnimatePresence>
+
+                            {/* Next arrow */}
+                            {activeSubject.images.length > 1 && (
+                                <button
+                                    onClick={nextImage}
+                                    className="absolute right-4 z-10 w-10 h-10 flex items-center justify-center rounded-full border border-white/20 text-white/70 hover:border-gold hover:text-gold transition-all duration-200"
+                                >
+                                    <ChevronRight size={20} />
+                                </button>
+                            )}
+                        </div>
+
+                        {/* Footer: counter + thumbnail strip */}
+                        <div
+                            className="flex-shrink-0 pb-8 pt-4 flex flex-col items-center gap-3"
+                            onClick={(e) => e.stopPropagation()}
+                        >
+                            {/* Counter */}
+                            <p className="text-[11px] tracking-widest text-white/40 uppercase">
+                                {galleryIndex + 1} / {activeSubject.images.length}
+                            </p>
+
+                            {/* Thumbnail strip */}
+                            <div className="flex gap-2 overflow-x-auto px-4 max-w-full">
+                                {activeSubject.images.map((img, idx) => (
+                                    <button
+                                        key={idx}
+                                        onClick={() => setGalleryIndex(idx)}
+                                        className={`flex-shrink-0 relative w-12 h-12 rounded-sm overflow-hidden border-2 transition-all duration-200 ${idx === galleryIndex
+                                                ? "border-gold"
+                                                : "border-white/10 opacity-50 hover:opacity-80"
+                                            }`}
+                                    >
+                                        <Image
+                                            src={img}
+                                            alt={`thumb ${idx + 1}`}
+                                            fill
+                                            className="object-cover"
+                                            sizes="48px"
+                                        />
+                                    </button>
+                                ))}
                             </div>
-                        </motion.div>
+                        </div>
                     </motion.div>
                 )}
             </AnimatePresence>
