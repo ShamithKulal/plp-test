@@ -3,6 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useState, useEffect } from "react";
+import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X } from "lucide-react";
 
@@ -19,6 +20,14 @@ const navLinks = [
 export default function Navbar() {
     const [scrolled, setScrolled] = useState(false);
     const [menuOpen, setMenuOpen] = useState(false);
+    const pathname = usePathname();
+
+    const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+        if (pathname === href) {
+            e.preventDefault();
+            window.scrollTo({ top: 0, behavior: "smooth" });
+        }
+    };
 
     useEffect(() => {
         const onScroll = () => setScrolled(window.scrollY > 50);
@@ -84,7 +93,12 @@ export default function Navbar() {
                     {/* Desktop Nav */}
                     <nav className="plp-nav-desktop">
                         {navLinks.map((link) => (
-                            <Link key={link.href} href={link.href} className="plp-nav-link">
+                            <Link
+                                key={link.href}
+                                href={link.href}
+                                className="plp-nav-link"
+                                onClick={(e) => handleNavClick(e, link.href)}
+                            >
                                 {link.label}
                             </Link>
                         ))}
@@ -147,7 +161,10 @@ export default function Navbar() {
                             >
                                 <Link
                                     href={link.href}
-                                    onClick={() => setMenuOpen(false)}
+                                    onClick={(e) => {
+                                        setMenuOpen(false);
+                                        handleNavClick(e, link.href);
+                                    }}
                                     style={{
                                         display: "block",
                                         padding: "16px 0",
