@@ -19,6 +19,7 @@ const navLinks = [
 export default function Navbar() {
     const [scrolled, setScrolled] = useState(false);
     const [menuOpen, setMenuOpen] = useState(false);
+    const [mounted, setMounted] = useState(false);
     const pathname = usePathname();
 
     const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
@@ -29,6 +30,7 @@ export default function Navbar() {
     };
 
     useEffect(() => {
+        setMounted(true);
         const onScroll = () => setScrolled(window.scrollY > 50);
         window.addEventListener("scroll", onScroll, { passive: true });
         return () => window.removeEventListener("scroll", onScroll);
@@ -37,7 +39,7 @@ export default function Navbar() {
     return (
         <>
             {/* Top gradient: darkens hero image tops so nav text is always readable */}
-            {!scrolled && (
+            {mounted && !scrolled && (
                 <div
                     style={{
                         position: "fixed",

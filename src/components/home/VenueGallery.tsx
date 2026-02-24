@@ -23,7 +23,7 @@ function VenueCard({ venue }: { venue: typeof venues[0] }) {
         <motion.div
             whileHover={{
                 borderColor: "rgba(245,166,35,0.55)",
-                boxShadow: "0 0 28px rgba(245,166,35,0.16)",
+                boxShadow: "0 12px 40px rgba(0,0,0,0.5)",
                 y: -4,
             }}
             transition={{ duration: 0.25 }}
@@ -131,7 +131,7 @@ export default function VenueGallery() {
 
                     {/* Infinite marquee strip */}
                     <div
-                        style={{ overflow: "hidden", paddingBottom: "8px" }}
+                        style={{ overflow: "hidden", paddingTop: "24px", paddingBottom: "24px" }}
                         onMouseEnter={() => setPaused(true)}
                         onMouseLeave={() => setPaused(false)}
                     >

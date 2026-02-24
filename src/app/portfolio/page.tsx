@@ -254,14 +254,14 @@ export default function PortfolioPage() {
                                         className="object-cover group-hover:scale-105 transition-transform duration-700"
                                         sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                                     />
-                                    <div className="absolute inset-0 bg-gradient-to-t from-black via-black/70 to-black/10" />
+                                    <div className="absolute inset-0 bg-gradient-to-t from-black via-black/60 to-transparent opacity-90 transition-opacity duration-500" />
                                 </div>
 
                                 {/* Name + location overlay */}
-                                <div className="absolute bottom-0 left-0 right-0 p-5">
-                                    <p className="font-serif text-base text-white leading-snug">{subject.name}</p>
-                                    <p className="text-[10px] text-gold mt-1 tracking-wide">{subject.location}</p>
-                                    <p className="text-[10px] text-white/40 mt-0.5">
+                                <div className="absolute bottom-0 left-0 right-0 p-6 drop-shadow-md">
+                                    <p className="font-serif text-base text-white leading-snug drop-shadow-sm">{subject.name}</p>
+                                    <p className="text-[10px] text-gold mt-1 tracking-wide font-medium">{subject.location}</p>
+                                    <p className="text-[10px] text-white/60 mt-0.5">
                                         {subject.images.length} photos · tap to view
                                     </p>
                                 </div>
