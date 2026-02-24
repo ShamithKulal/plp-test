@@ -47,6 +47,7 @@ export async function POST(req: NextRequest) {
             await fetch(sheetsUrl, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
+                redirect: "follow",
                 body: JSON.stringify({
                     timestamp: new Date().toISOString(),
                     name, phone, email: email || "", eventType, date, location,
