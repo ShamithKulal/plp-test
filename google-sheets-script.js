@@ -10,7 +10,7 @@
 
 function doPost(e) {
     try {
-        var sheet = SpreadsheetApp.openById("YOUR_SPREADSHEET_ID_HERE").getActiveSheet();
+        var sheet = SpreadsheetApp.openById("1IXMoslBBAPPx_zkugNfV2Ov2hOzdGkHibNnDcE4LJJM").getActiveSheet();
         var data = JSON.parse(e.postData.contents);
 
         // Add header row if sheet is empty
