@@ -147,7 +147,7 @@ export default function InquiryForm({ compact = false }: InquiryFormProps) {
                 disabled={isSubmitting}
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
-                className="w-full py-3.5 text-[13px] tracking-widest uppercase font-semibold bg-[var(--color-gold)] text-[var(--color-bg)] hover:bg-[var(--color-gold-light)] disabled:opacity-60 transition-all duration-300 rounded-sm"
+                className="w-full py-3.5 text-[13px] tracking-widest uppercase font-semibold bg-yellow-400 text-black hover:bg-yellow-300 disabled:opacity-60 transition-all duration-300 rounded-sm"
             >
                 {isSubmitting ? "Sending..." : "Check Availability →"}
             </motion.button>
