@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useRouter } from "next/navigation";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 
 const schema = z.object({
     name: z.string().min(2, "Name must be at least 2 characters"),
@@ -34,6 +34,33 @@ const eventTypes = [
 
 interface InquiryFormProps {
     compact?: boolean;
+}
+
+/** Three bouncing dots shown while the form is submitting */
+function LoadingDots() {
+    return (
+        <span style={{ display: "inline-flex", alignItems: "center", gap: "6px" }}>
+            {[0, 1, 2].map((i) => (
+                <motion.span
+                    key={i}
+                    animate={{ y: [0, -6, 0] }}
+                    transition={{
+                        duration: 0.6,
+                        delay: i * 0.15,
+                        repeat: Infinity,
+                        ease: "easeInOut",
+                    }}
+                    style={{
+                        display: "inline-block",
+                        width: 7,
+                        height: 7,
+                        borderRadius: "50%",
+                        background: "#0D1B3E",
+                    }}
+                />
+            ))}
+        </span>
+    );
 }
 
 export default function InquiryForm({ compact = false }: InquiryFormProps) {
@@ -142,14 +169,61 @@ export default function InquiryForm({ compact = false }: InquiryFormProps) {
             <input type="hidden" {...register("utm_medium")} />
             <input type="hidden" {...register("utm_campaign")} />
 
+            {/* Submit button with loading animation */}
             <motion.button
                 type="submit"
                 disabled={isSubmitting}
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                className="w-full py-3.5 text-[13px] tracking-widest uppercase font-semibold bg-yellow-400 text-black hover:bg-yellow-300 disabled:opacity-60 transition-all duration-300 rounded-sm"
+                whileHover={!isSubmitting ? { scale: 1.02 } : {}}
+                whileTap={!isSubmitting ? { scale: 0.98 } : {}}
+                style={{ position: "relative", overflow: "hidden" }}
+                className="w-full py-3.5 text-[13px] tracking-widest uppercase font-semibold bg-yellow-400 text-black disabled:cursor-not-allowed transition-colors duration-300 rounded-sm"
             >
-                {isSubmitting ? "Sending..." : "Check Availability →"}
+                {/* Shimmer sweep overlay while loading */}
+                <AnimatePresence>
+                    {isSubmitting && (
+                        <motion.span
+                            key="shimmer"
+                            initial={{ x: "-100%" }}
+                            animate={{ x: "200%" }}
+                            exit={{ opacity: 0 }}
+                            transition={{ duration: 1.1, repeat: Infinity, ease: "linear" }}
+                            style={{
+                                position: "absolute",
+                                inset: 0,
+                                background:
+                                    "linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.45) 50%, transparent 60%)",
+                                pointerEvents: "none",
+                            }}
+                        />
+                    )}
+                </AnimatePresence>
+
+                {/* Button label with smooth crossfade */}
+                <AnimatePresence mode="wait">
+                    {isSubmitting ? (
+                        <motion.span
+                            key="loading"
+                            initial={{ opacity: 0, y: 8 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: -8 }}
+                            transition={{ duration: 0.2 }}
+                            style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "10px" }}
+                        >
+                            <span style={{ fontSize: "12px", letterSpacing: "0.15em" }}>Sending</span>
+                            <LoadingDots />
+                        </motion.span>
+                    ) : (
+                        <motion.span
+                            key="idle"
+                            initial={{ opacity: 0, y: 8 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: -8 }}
+                            transition={{ duration: 0.2 }}
+                        >
+                            Check Availability →
+                        </motion.span>
+                    )}
+                </AnimatePresence>
             </motion.button>
         </form>
     );
