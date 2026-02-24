@@ -29,10 +29,33 @@ const services = [
     },
 ];
 
+const containerVariants = {
+    hidden: {},
+    visible: {
+        transition: { staggerChildren: 0.18 },
+    },
+};
+
+const cardVariants = {
+    hidden: { opacity: 0, y: 48, scale: 0.97 },
+    visible: {
+        opacity: 1,
+        y: 0,
+        scale: 1,
+        transition: { duration: 0.65, ease: [0.22, 1, 0.36, 1] },
+    },
+};
+
 export default function ServicesGrid() {
     return (
         <section style={{ padding: "96px 0", maxWidth: "1280px", margin: "0 auto", paddingLeft: "24px", paddingRight: "24px" }}>
-            <div style={{ textAlign: "center", marginBottom: "64px" }}>
+            <motion.div
+                initial={{ opacity: 0, y: 24 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.7 }}
+                style={{ textAlign: "center", marginBottom: "64px" }}
+            >
                 <p style={{ fontSize: "11px", letterSpacing: "0.4em", textTransform: "uppercase", color: "#F5A623", marginBottom: "12px" }}>
                     What We Do
                 </p>
@@ -40,39 +63,52 @@ export default function ServicesGrid() {
                     Services Built for{" "}
                     <span style={{ color: "#F5A623" }}>Your Story</span>
                 </h2>
-            </div>
+            </motion.div>
 
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: "24px" }}>
-                {services.map((service, i) => (
+            <motion.div
+                variants={containerVariants}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true, margin: "-60px" }}
+                style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: "24px" }}
+            >
+                {services.map((service) => (
                     <motion.div
                         key={service.title}
-                        initial={{ opacity: 0, y: 40 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true, margin: "-50px" }}
-                        transition={{ delay: i * 0.15, duration: 0.6 }}
+                        variants={cardVariants}
+                        whileHover={{
+                            boxShadow: "0 0 40px rgba(245,166,35,0.18)",
+                            borderColor: "rgba(245,166,35,0.5)",
+                            y: -6,
+                        }}
                         style={{
                             background: "#112055",
                             border: "1px solid #1E3170",
                             borderRadius: "2px",
                             overflow: "hidden",
-                            transition: "all 0.4s",
                         }}
-                        whileHover={{ boxShadow: "0 0 32px rgba(245,166,35,0.14)", borderColor: "rgba(245,166,35,0.4)" }}
                     >
-                        {/* Image */}
+                        {/* Image with zoom on hover */}
                         <div style={{ position: "relative", height: "280px", overflow: "hidden" }}>
-                            <Image
-                                src={service.image}
-                                alt={service.title}
-                                fill
-                                style={{ objectFit: "cover", transition: "transform 0.7s" }}
-                                sizes="(max-width: 768px) 100vw, 33vw"
-                            />
+                            <motion.div
+                                style={{ position: "absolute", inset: 0 }}
+                                whileHover={{ scale: 1.08 }}
+                                transition={{ duration: 0.6, ease: "easeOut" }}
+                            >
+                                <Image
+                                    src={service.image}
+                                    alt={service.title}
+                                    fill
+                                    style={{ objectFit: "cover" }}
+                                    sizes="(max-width: 768px) 100vw, 33vw"
+                                />
+                            </motion.div>
                             <div
                                 style={{
                                     position: "absolute",
                                     inset: 0,
                                     background: "linear-gradient(to top, rgba(13,27,62,0.9) 0%, transparent 60%)",
+                                    zIndex: 1,
                                 }}
                             />
                             {/* Tag badge */}
@@ -90,6 +126,7 @@ export default function ServicesGrid() {
                                     padding: "4px 12px",
                                     borderRadius: "999px",
                                     backdropFilter: "blur(8px)",
+                                    zIndex: 2,
                                 }}
                             >
                                 {service.tag}
@@ -111,48 +148,71 @@ export default function ServicesGrid() {
                             <p style={{ fontSize: "13px", color: "#7A95C9", lineHeight: 1.7, marginBottom: "16px" }}>
                                 {service.description}
                             </p>
-                            <Link
-                                href={service.href}
-                                style={{
-                                    display: "inline-flex",
-                                    alignItems: "center",
-                                    gap: "6px",
-                                    fontSize: "11px",
-                                    letterSpacing: "0.12em",
-                                    textTransform: "uppercase",
-                                    color: "#F5A623",
-                                    textDecoration: "none",
-                                    transition: "gap 0.3s",
-                                }}
+                            <motion.div
+                                whileHover="hover"
+                                initial="rest"
+                                animate="rest"
+                                style={{ display: "inline-block" }}
                             >
-                                Learn More <ArrowRight size={13} />
-                            </Link>
+                                <Link
+                                    href={service.href}
+                                    style={{
+                                        display: "inline-flex",
+                                        alignItems: "center",
+                                        gap: "6px",
+                                        fontSize: "11px",
+                                        letterSpacing: "0.12em",
+                                        textTransform: "uppercase",
+                                        color: "#F5A623",
+                                        textDecoration: "none",
+                                    }}
+                                >
+                                    Learn More
+                                    <motion.span
+                                        variants={{
+                                            rest: { x: 0, opacity: 0.6 },
+                                            hover: { x: 5, opacity: 1 },
+                                        }}
+                                        transition={{ duration: 0.25 }}
+                                    >
+                                        <ArrowRight size={13} />
+                                    </motion.span>
+                                </Link>
+                            </motion.div>
                         </div>
                     </motion.div>
                 ))}
-            </div>
+            </motion.div>
 
-            <div style={{ textAlign: "center", marginTop: "48px" }}>
-                <Link
-                    href="/portfolio"
-                    style={{
-                        display: "inline-flex",
-                        alignItems: "center",
-                        gap: "8px",
-                        padding: "14px 36px",
-                        border: "1px solid #F5A623",
-                        color: "#F5A623",
-                        fontSize: "12px",
-                        letterSpacing: "0.2em",
-                        textTransform: "uppercase",
-                        textDecoration: "none",
-                        borderRadius: "2px",
-                        transition: "all 0.3s",
-                    }}
-                >
-                    View Full Portfolio <ArrowRight size={13} />
-                </Link>
-            </div>
+            <motion.div
+                initial={{ opacity: 0, y: 16 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: 0.3 }}
+                style={{ textAlign: "center", marginTop: "48px" }}
+            >
+                <motion.div whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }} style={{ display: "inline-block" }}>
+                    <Link
+                        href="/portfolio"
+                        style={{
+                            display: "inline-flex",
+                            alignItems: "center",
+                            gap: "8px",
+                            padding: "14px 36px",
+                            border: "1px solid #F5A623",
+                            color: "#F5A623",
+                            fontSize: "12px",
+                            letterSpacing: "0.2em",
+                            textTransform: "uppercase",
+                            textDecoration: "none",
+                            borderRadius: "2px",
+                            transition: "all 0.3s",
+                        }}
+                    >
+                        View Full Portfolio <ArrowRight size={13} />
+                    </Link>
+                </motion.div>
+            </motion.div>
         </section>
     );
 }

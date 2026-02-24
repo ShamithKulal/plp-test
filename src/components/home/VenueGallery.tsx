@@ -1,5 +1,6 @@
 "use client";
 
+import { useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { MapPin } from "lucide-react";
 
@@ -14,107 +15,168 @@ const venues = [
     { name: "Karavali Utsav Maidan", location: "Udupi" },
 ];
 
-export default function VenueGallery() {
+// Duplicate for seamless loop
+const allVenues = [...venues, ...venues];
+
+function VenueCard({ venue }: { venue: typeof venues[0] }) {
     return (
-        <section
+        <motion.div
+            whileHover={{
+                borderColor: "rgba(245,166,35,0.55)",
+                boxShadow: "0 0 28px rgba(245,166,35,0.16)",
+                y: -4,
+            }}
+            transition={{ duration: 0.25 }}
             style={{
-                position: "relative",
-                overflow: "hidden",
-                padding: "96px 0",
+                flexShrink: 0,
+                width: "220px",
+                background: "#112055",
+                border: "1px solid #1E3170",
+                borderRadius: "2px",
+                padding: "20px",
+                cursor: "default",
             }}
         >
-            {/* Lamp glow from top */}
-            <div
+            <motion.div
+                whileHover={{ scale: 1.15, rotate: 8 }}
+                transition={{ type: "spring", stiffness: 300, damping: 15 }}
                 style={{
-                    position: "absolute",
-                    inset: 0,
-                    background:
-                        "radial-gradient(ellipse 70% 50% at 50% -10%, rgba(245,166,35,0.22) 0%, transparent 70%)",
-                    pointerEvents: "none",
+                    width: "32px",
+                    height: "32px",
+                    borderRadius: "50%",
+                    background: "rgba(245,166,35,0.10)",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    marginBottom: "16px",
                 }}
-            />
+            >
+                <MapPin size={14} style={{ color: "#F5A623" }} />
+            </motion.div>
+            <h3
+                style={{
+                    fontFamily: "var(--font-playfair), Georgia, serif",
+                    fontSize: "16px",
+                    color: "white",
+                    marginBottom: "4px",
+                    lineHeight: 1.3,
+                }}
+            >
+                {venue.name}
+            </h3>
+            <p style={{ color: "#7A95C9", fontSize: "12px", letterSpacing: "0.05em" }}>
+                {venue.location}
+            </p>
+        </motion.div>
+    );
+}
 
-            <div style={{ position: "relative", zIndex: 1 }}>
-                {/* Header */}
-                <div style={{ maxWidth: "1280px", margin: "0 auto", padding: "0 24px 48px", textAlign: "center" }}>
-                    <p style={{ fontSize: "11px", letterSpacing: "0.4em", textTransform: "uppercase", color: "#F5A623", marginBottom: "12px" }}>
-                        Where We Work
-                    </p>
-                    <h2 style={{ fontFamily: "var(--font-playfair), Georgia, serif", fontSize: "clamp(30px, 4vw, 48px)", color: "white", marginBottom: "16px" }}>
-                        Iconic Venues Across{" "}
-                        <span style={{ color: "#F5A623" }}>Coastal Karnataka</span>
-                    </h2>
-                    <p style={{ color: "#7A95C9", maxWidth: "520px", margin: "0 auto", fontSize: "14px", lineHeight: 1.7 }}>
-                        We have photographed at 50+ venues across Udupi, Mangalore, Manipal, and beyond.
-                    </p>
-                </div>
+export default function VenueGallery() {
+    const [paused, setPaused] = useState(false);
 
-                {/* Venue cards scroll */}
-                <div style={{ overflowX: "auto", paddingBottom: "16px" }}>
+    return (
+        <>
+            {/* CSS keyframe injected once */}
+            <style>{`
+                @keyframes venue-marquee {
+                    from { transform: translateX(0); }
+                    to   { transform: translateX(-50%); }
+                }
+                .venue-track {
+                    animation: venue-marquee 28s linear infinite;
+                }
+                .venue-track.paused {
+                    animation-play-state: paused;
+                }
+            `}</style>
+
+            <section
+                style={{
+                    position: "relative",
+                    overflow: "hidden",
+                    padding: "96px 0",
+                }}
+            >
+                {/* Lamp glow from top */}
+                <div
+                    style={{
+                        position: "absolute",
+                        inset: 0,
+                        background:
+                            "radial-gradient(ellipse 70% 50% at 50% -10%, rgba(245,166,35,0.22) 0%, transparent 70%)",
+                        pointerEvents: "none",
+                    }}
+                />
+
+                <div style={{ position: "relative", zIndex: 1 }}>
+                    {/* Header */}
+                    <motion.div
+                        initial={{ opacity: 0, y: 24 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.7 }}
+                        style={{ maxWidth: "1280px", margin: "0 auto", padding: "0 24px 48px", textAlign: "center" }}
+                    >
+                        <p style={{ fontSize: "11px", letterSpacing: "0.4em", textTransform: "uppercase", color: "#F5A623", marginBottom: "12px" }}>
+                            Where We Work
+                        </p>
+                        <h2 style={{ fontFamily: "var(--font-playfair), Georgia, serif", fontSize: "clamp(30px, 4vw, 48px)", color: "white", marginBottom: "16px" }}>
+                            Iconic Venues Across{" "}
+                            <span style={{ color: "#F5A623" }}>Coastal Karnataka</span>
+                        </h2>
+                        <p style={{ color: "#7A95C9", maxWidth: "520px", margin: "0 auto", fontSize: "14px", lineHeight: 1.7 }}>
+                            We have photographed at 50+ venues across Udupi, Mangalore, Manipal, and beyond.
+                        </p>
+                    </motion.div>
+
+                    {/* Infinite marquee strip */}
+                    <div
+                        style={{ overflow: "hidden", paddingBottom: "8px" }}
+                        onMouseEnter={() => setPaused(true)}
+                        onMouseLeave={() => setPaused(false)}
+                    >
+                        <div
+                            className={`venue-track${paused ? " paused" : ""}`}
+                            style={{
+                                display: "flex",
+                                gap: "16px",
+                                padding: "0 24px",
+                                width: "max-content",
+                            }}
+                        >
+                            {allVenues.map((venue, i) => (
+                                <VenueCard key={`${venue.name}-${i}`} venue={venue} />
+                            ))}
+                        </div>
+                    </div>
+
+                    {/* Fade edges */}
                     <div
                         style={{
-                            display: "flex",
-                            gap: "16px",
-                            padding: "0 24px",
-                            width: "max-content",
-                            maxWidth: "1280px",
-                            margin: "0 auto",
+                            position: "absolute",
+                            top: 0,
+                            left: 0,
+                            width: "80px",
+                            height: "100%",
+                            background: "linear-gradient(to right, #0D1B3E, transparent)",
+                            pointerEvents: "none",
+                            zIndex: 2,
                         }}
-                    >
-                        {venues.map((venue, i) => (
-                            <motion.div
-                                key={venue.name}
-                                initial={{ opacity: 0, y: 30 }}
-                                whileInView={{ opacity: 1, y: 0 }}
-                                viewport={{ once: true }}
-                                transition={{ delay: i * 0.08, duration: 0.5 }}
-                                style={{
-                                    flexShrink: 0,
-                                    width: "220px",
-                                    background: "#112055",
-                                    border: "1px solid #1E3170",
-                                    borderRadius: "2px",
-                                    padding: "20px",
-                                    transition: "all 0.3s",
-                                }}
-                                whileHover={{
-                                    borderColor: "rgba(245,166,35,0.45)",
-                                    boxShadow: "0 0 24px rgba(245,166,35,0.12)",
-                                }}
-                            >
-                                <div
-                                    style={{
-                                        width: "32px",
-                                        height: "32px",
-                                        borderRadius: "50%",
-                                        background: "rgba(245,166,35,0.10)",
-                                        display: "flex",
-                                        alignItems: "center",
-                                        justifyContent: "center",
-                                        marginBottom: "16px",
-                                    }}
-                                >
-                                    <MapPin size={14} style={{ color: "#F5A623" }} />
-                                </div>
-                                <h3
-                                    style={{
-                                        fontFamily: "var(--font-playfair), Georgia, serif",
-                                        fontSize: "16px",
-                                        color: "white",
-                                        marginBottom: "4px",
-                                        lineHeight: 1.3,
-                                    }}
-                                >
-                                    {venue.name}
-                                </h3>
-                                <p style={{ color: "#7A95C9", fontSize: "12px", letterSpacing: "0.05em" }}>
-                                    {venue.location}
-                                </p>
-                            </motion.div>
-                        ))}
-                    </div>
+                    />
+                    <div
+                        style={{
+                            position: "absolute",
+                            top: 0,
+                            right: 0,
+                            width: "80px",
+                            height: "100%",
+                            background: "linear-gradient(to left, #0D1B3E, transparent)",
+                            pointerEvents: "none",
+                            zIndex: 2,
+                        }}
+                    />
                 </div>
-            </div>
-        </section>
+            </section>
+        </>
     );
 }

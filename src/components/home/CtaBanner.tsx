@@ -59,6 +59,44 @@ export default function CtaBanner() {
                 }}
             />
 
+            {/* Pulsing golden beacon ring */}
+            <div
+                style={{
+                    position: "absolute",
+                    top: "50%",
+                    left: "50%",
+                    transform: "translate(-50%, -50%)",
+                    pointerEvents: "none",
+                    zIndex: 0,
+                }}
+            >
+                {[0, 0.8, 1.6].map((delay) => (
+                    <motion.div
+                        key={delay}
+                        style={{
+                            position: "absolute",
+                            top: "50%",
+                            left: "50%",
+                            width: "320px",
+                            height: "320px",
+                            borderRadius: "50%",
+                            border: "1px solid rgba(245,166,35,0.30)",
+                            transform: "translate(-50%, -50%)",
+                        }}
+                        animate={{
+                            scale: [1, 1.7],
+                            opacity: [0.4, 0],
+                        }}
+                        transition={{
+                            duration: 2.4,
+                            delay,
+                            repeat: Infinity,
+                            ease: "easeOut",
+                        }}
+                    />
+                ))}
+            </div>
+
             <div
                 style={{
                     position: "relative",
@@ -75,9 +113,13 @@ export default function CtaBanner() {
                     viewport={{ once: true }}
                     transition={{ duration: 0.8 }}
                 >
-                    <p style={{ fontSize: "11px", letterSpacing: "0.45em", textTransform: "uppercase", color: "#F5A623", marginBottom: "20px" }}>
+                    <motion.p
+                        animate={{ opacity: [0.7, 1, 0.7] }}
+                        transition={{ duration: 2.5, repeat: Infinity }}
+                        style={{ fontSize: "11px", letterSpacing: "0.45em", textTransform: "uppercase", color: "#F5A623", marginBottom: "20px" }}
+                    >
                         Limited Dates Available
-                    </p>
+                    </motion.p>
                     <h2
                         style={{
                             fontFamily: "var(--font-playfair), Georgia, serif",
@@ -93,49 +135,75 @@ export default function CtaBanner() {
                         the Best Photographer
                     </h2>
                     <p style={{ color: "#7A95C9", fontSize: "15px", maxWidth: "480px", margin: "0 auto 40px", lineHeight: 1.8 }}>
-                        Join 500+ happy couples across Udupi & Mangalore who chose Paperlight Productions to tell their love story.
+                        Join 500+ happy couples across Udupi &amp; Mangalore who chose Paperlight Productions to tell their love story.
                     </p>
 
+                    {/* Shimmer CTA style */}
+                    <style>{`
+                        @keyframes shimmer {
+                            0%   { background-position: -200% center; }
+                            100% { background-position:  200% center; }
+                        }
+                        .cta-shimmer {
+                            background: linear-gradient(
+                                105deg,
+                                #F5A623 0%,
+                                #FFD27F 45%,
+                                #F5A623 55%,
+                                #E5901A 100%
+                            );
+                            background-size: 200% auto;
+                            animation: shimmer 2.4s linear infinite;
+                        }
+                        .cta-shimmer:hover {
+                            box-shadow: 0 0 60px rgba(245,166,35,0.55) !important;
+                        }
+                    `}</style>
+
                     <div style={{ display: "flex", gap: "16px", justifyContent: "center", flexWrap: "wrap" }}>
-                        <Link
-                            href="#contact"
-                            style={{
-                                display: "inline-flex",
-                                alignItems: "center",
-                                padding: "16px 40px",
-                                fontSize: "12px",
-                                letterSpacing: "0.2em",
-                                textTransform: "uppercase",
-                                fontWeight: 700,
-                                background: "#F5A623",
-                                color: "#0D1B3E",
-                                textDecoration: "none",
-                                borderRadius: "2px",
-                                boxShadow: "0 0 40px rgba(245,166,35,0.30)",
-                                transition: "all 0.3s",
-                            }}
-                        >
-                            Check Availability
-                        </Link>
-                        <Link
-                            href="/portfolio"
-                            style={{
-                                display: "inline-flex",
-                                alignItems: "center",
-                                padding: "16px 40px",
-                                fontSize: "12px",
-                                letterSpacing: "0.2em",
-                                textTransform: "uppercase",
-                                fontWeight: 500,
-                                border: "1px solid rgba(255,255,255,0.25)",
-                                color: "white",
-                                textDecoration: "none",
-                                borderRadius: "2px",
-                                transition: "all 0.3s",
-                            }}
-                        >
-                            View Portfolio
-                        </Link>
+                        <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.97 }}>
+                            <Link
+                                href="#contact"
+                                className="cta-shimmer"
+                                style={{
+                                    display: "inline-flex",
+                                    alignItems: "center",
+                                    padding: "16px 40px",
+                                    fontSize: "12px",
+                                    letterSpacing: "0.2em",
+                                    textTransform: "uppercase",
+                                    fontWeight: 700,
+                                    color: "#0D1B3E",
+                                    textDecoration: "none",
+                                    borderRadius: "2px",
+                                    boxShadow: "0 0 40px rgba(245,166,35,0.30)",
+                                    transition: "box-shadow 0.3s",
+                                }}
+                            >
+                                Check Availability
+                            </Link>
+                        </motion.div>
+                        <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.97 }}>
+                            <Link
+                                href="/portfolio"
+                                style={{
+                                    display: "inline-flex",
+                                    alignItems: "center",
+                                    padding: "16px 40px",
+                                    fontSize: "12px",
+                                    letterSpacing: "0.2em",
+                                    textTransform: "uppercase",
+                                    fontWeight: 500,
+                                    border: "1px solid rgba(255,255,255,0.25)",
+                                    color: "white",
+                                    textDecoration: "none",
+                                    borderRadius: "2px",
+                                    transition: "all 0.3s",
+                                }}
+                            >
+                                View Portfolio
+                            </Link>
+                        </motion.div>
                     </div>
                 </motion.div>
             </div>
