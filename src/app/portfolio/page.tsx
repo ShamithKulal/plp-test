@@ -82,6 +82,50 @@ const portfolioData: CategoryData[] = [
         subjects: [
             {
                 id: 5,
+                name: "Prakash & Sonal",
+                location: "Beach",
+                coverImage: "/prewedding/prakash-sonal-beach/PP-002_2_11zon.jpg",
+                images: [
+                    "/prewedding/prakash-sonal-beach/PP-002_2_11zon.jpg",
+                    "/prewedding/prakash-sonal-beach/PP-012_3_11zon.jpg",
+                    "/prewedding/prakash-sonal-beach/PP-014_4_11zon.jpg",
+                    "/prewedding/prakash-sonal-beach/PP-028_5_11zon.jpg",
+                    "/prewedding/prakash-sonal-beach/PP-035_6_11zon.jpg",
+                    "/prewedding/prakash-sonal-beach/PP-037_7_11zon.jpg",
+                    "/prewedding/prakash-sonal-beach/PP-045_8_11zon.jpg",
+                ],
+            },
+            {
+                id: 6,
+                name: "Prakash & Sonal",
+                location: "Heritage House",
+                coverImage: "/prewedding/prakash-sonal-heritage/PP-057_1_11zon.jpg",
+                images: [
+                    "/prewedding/prakash-sonal-heritage/PP-057_1_11zon.jpg",
+                    "/prewedding/prakash-sonal-heritage/PP-064_2_11zon.jpg",
+                    "/prewedding/prakash-sonal-heritage/PP-070_3_11zon.jpg",
+                    "/prewedding/prakash-sonal-heritage/PP-072_4_11zon.jpg",
+                    "/prewedding/prakash-sonal-heritage/PP-077_5_11zon.jpg",
+                    "/prewedding/prakash-sonal-heritage/PP-082_6_11zon.jpg",
+                ],
+            },
+            {
+                id: 7,
+                name: "Prakash & Sonal",
+                location: "Traditional",
+                coverImage: "/prewedding/prakash-sonal-traditional/PP-131_3_11zon.jpg",
+                images: [
+                    "/prewedding/prakash-sonal-traditional/PP-122_1_11zon.jpg",
+                    "/prewedding/prakash-sonal-traditional/PP-130_2_11zon.jpg",
+                    "/prewedding/prakash-sonal-traditional/PP-131_3_11zon.jpg",
+                    "/prewedding/prakash-sonal-traditional/PP-136_4_11zon.jpg",
+                    "/prewedding/prakash-sonal-traditional/PP-137_5_11zon.jpg",
+                    "/prewedding/prakash-sonal-traditional/PP-138_6_11zon.jpg",
+                    "/prewedding/prakash-sonal-traditional/PP-143_7_11zon.jpg",
+                ],
+            },
+            {
+                id: 8,
                 name: "Coastal Romance",
                 location: "Malpe Beach, Udupi",
                 coverImage: "/prewedding-hero.jpg",
@@ -94,7 +138,7 @@ const portfolioData: CategoryData[] = [
                 ],
             },
             {
-                id: 6,
+                id: 9,
                 name: "Sunset at Kaup",
                 location: "Kaup Lighthouse, Udupi",
                 coverImage: "/hero-wedding.jpg",
@@ -106,7 +150,7 @@ const portfolioData: CategoryData[] = [
                 ],
             },
             {
-                id: 7,
+                id: 10,
                 name: "Golden Hour",
                 location: "Mangalore Coastline",
                 coverImage: "/prewedding-hero.jpg",
@@ -122,26 +166,38 @@ const portfolioData: CategoryData[] = [
         label: "Haldi & Mehendi",
         subjects: [
             {
-                id: 8,
-                name: "Golden Haldi Morning",
-                location: "Udupi",
-                coverImage: "/prewedding-hero.jpg",
+                id: 11,
+                name: "Poojitha",
+                location: "Haldi",
+                coverImage: "/haldi-mehandi/poojitha-haldi/DSC00081_11zon.jpg",
                 images: [
-                    "/prewedding-hero.jpg",
-                    "/hero-wedding.jpg",
-                    "/prewedding-hero.jpg",
-                    "/hero-wedding.jpg",
+                    "/haldi-mehandi/poojitha-haldi/DSC00081_11zon.jpg",
+                    "/haldi-mehandi/poojitha-haldi/IMG_6196_1_11zon.jpg",
+                    "/haldi-mehandi/poojitha-haldi/IMG_6231_2_11zon.jpg",
+                    "/haldi-mehandi/poojitha-haldi/IMG_6441_3_11zon.jpg",
+                    "/haldi-mehandi/poojitha-haldi/IMG_5760_6_11zon.jpg",
+                    "/haldi-mehandi/poojitha-haldi/IMG_5955_7_11zon.jpg",
+                    "/haldi-mehandi/poojitha-haldi/IMG_6025_8_11zon.jpg",
+                    "/haldi-mehandi/poojitha-haldi/IMG_6050_9_11zon.jpg",
+                    "/haldi-mehandi/poojitha-haldi/IMG_6134_10_11zon.jpg",
+                    "/haldi-mehandi/poojitha-haldi/IMG_6196_11_11zon.jpg",
                 ],
             },
             {
-                id: 9,
-                name: "Mehendi Moments",
-                location: "Mangalore",
-                coverImage: "/hero-wedding.jpg",
+                id: 12,
+                name: "Poojitha",
+                location: "Mehandi",
+                coverImage: "/haldi-mehandi/poojitha-mehandi/DSC00873_1_11zon.jpg",
                 images: [
-                    "/hero-wedding.jpg",
-                    "/prewedding-hero.jpg",
-                    "/hero-wedding.jpg",
+                    "/haldi-mehandi/poojitha-mehandi/DSC00873_1_11zon.jpg",
+                    "/haldi-mehandi/poojitha-mehandi/IMG_6497_2_11zon.jpg",
+                    "/haldi-mehandi/poojitha-mehandi/IMG_6518_3_11zon.jpg",
+                    "/haldi-mehandi/poojitha-mehandi/IMG_6541_4_11zon.jpg",
+                    "/haldi-mehandi/poojitha-mehandi/IMG_6578_5_11zon.jpg",
+                    "/haldi-mehandi/poojitha-mehandi/IMG_6614_6_11zon.jpg",
+                    "/haldi-mehandi/poojitha-mehandi/IMG_6670_1_11zon.jpg",
+                    "/haldi-mehandi/poojitha-mehandi/IMG_6884_2_11zon.jpg",
+                    "/haldi-mehandi/poojitha-mehandi/IMG_6940_3_11zon.jpg",
                 ],
             },
         ],
@@ -150,7 +206,7 @@ const portfolioData: CategoryData[] = [
         label: "Corporate",
         subjects: [
             {
-                id: 10,
+                id: 13,
                 name: "Annual Tech Summit",
                 location: "Hotel Moti Mahal, Mangalore",
                 coverImage: "/hero-wedding.jpg",
@@ -163,7 +219,7 @@ const portfolioData: CategoryData[] = [
                 ],
             },
             {
-                id: 11,
+                id: 14,
                 name: "Product Launch 2024",
                 location: "Goldfinch Hotel, Mangalore",
                 coverImage: "/prewedding-hero.jpg",
@@ -244,8 +300,8 @@ export default function PortfolioPage() {
                         key={cat}
                         onClick={() => setActiveCategory(cat)}
                         className={`px-5 py-2 text-[12px] tracking-wider uppercase rounded-full border transition-all duration-300 ${activeCategory === cat
-                                ? "bg-gold text-[#0F0F0F] border-gold font-semibold"
-                                : "border-[var(--color-border)] text-[var(--color-muted)] hover:border-gold hover:text-gold"
+                            ? "bg-gold text-[#0F0F0F] border-gold font-semibold"
+                            : "border-[var(--color-border)] text-[var(--color-muted)] hover:border-gold hover:text-gold"
                             }`}
                     >
                         {cat}
@@ -284,7 +340,7 @@ export default function PortfolioPage() {
                                         className="object-cover group-hover:scale-105 transition-transform duration-700"
                                         sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                                     />
-                                    <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/10 to-transparent" />
+                                    <div className="absolute inset-0 bg-gradient-to-t from-black via-black/70 to-black/10" />
                                 </div>
 
                                 {/* Name + location overlay */}
@@ -404,8 +460,8 @@ export default function PortfolioPage() {
                                         key={idx}
                                         onClick={() => setGalleryIndex(idx)}
                                         className={`flex-shrink-0 relative w-12 h-12 rounded-sm overflow-hidden border-2 transition-all duration-200 ${idx === galleryIndex
-                                                ? "border-gold"
-                                                : "border-white/10 opacity-50 hover:opacity-80"
+                                            ? "border-gold"
+                                            : "border-white/10 opacity-50 hover:opacity-80"
                                             }`}
                                     >
                                         <Image
