@@ -95,7 +95,11 @@ export default function Navbar() {
                     }}
                 >
                     {/* Logo */}
-                    <Link href="/" style={{ display: "flex", alignItems: "center", textDecoration: "none" }}>
+                    <Link
+                        href="/"
+                        style={{ display: "flex", alignItems: "center", textDecoration: "none" }}
+                        onClick={(e) => handleNavClick(e, "/")}
+                    >
                         <Image
                             src="/logo.png"
                             alt="Paperlight Productions"
