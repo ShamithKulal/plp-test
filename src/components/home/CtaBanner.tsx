@@ -163,7 +163,7 @@ export default function CtaBanner() {
                     <div style={{ display: "flex", gap: "16px", justifyContent: "center", flexWrap: "wrap" }}>
                         <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.97 }}>
                             <Link
-                                href="#contact"
+                                href="/contact"
                                 className="cta-shimmer"
                                 style={{
                                     display: "inline-flex",
