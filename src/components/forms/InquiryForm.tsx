@@ -131,7 +131,7 @@ export default function InquiryForm({ compact = false }: InquiryFormProps) {
                 </div>
                 <div>
                     <label className={labelClass}>Event Date *</label>
-                    <input {...register("date")} type="date" className={inputClass} />
+                    <input {...register("date")} type="date" className={inputClass} style={{ colorScheme: "dark" }} />
                     {errors.date && <p className={errorClass}>{errors.date.message}</p>}
                 </div>
             </div>
