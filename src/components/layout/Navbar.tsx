@@ -13,8 +13,6 @@ const navLinks = [
     { label: "Haldi & Mehendi", href: "/haldi-mehendi" },
     { label: "Portfolio", href: "/portfolio" },
     { label: "About", href: "/about" },
-    { label: "Blog", href: "/blog" },
-    { label: "Contact", href: "/contact" },
 ];
 
 export default function Navbar() {
@@ -127,7 +125,7 @@ export default function Navbar() {
 
                     {/* CTA + Hamburger */}
                     <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-                        <Link href="/contact" className="plp-cta-btn plp-nav-cta">
+                        <Link href="#contact" className="plp-cta-btn plp-nav-cta">
                             Book Now
                         </Link>
 
@@ -208,7 +206,7 @@ export default function Navbar() {
                             style={{ marginTop: "32px" }}
                         >
                             <Link
-                                href="/contact"
+                                href="#contact"
                                 onClick={() => setMenuOpen(false)}
                                 style={{
                                     display: "inline-block",
