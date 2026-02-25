@@ -1,12 +1,33 @@
 import { NextRequest, NextResponse } from "next/server";
+import { z } from "zod";
+
+const contactSchema = z.object({
+    name: z.string().min(2),
+    phone: z.string().regex(/^[6-9]\d{9}$/),
+    email: z.string().email().optional().or(z.literal("")),
+    eventType: z.string().min(1),
+    date: z.string().min(1),
+    location: z.string().min(2),
+    message: z.string().optional(),
+    referrer_url: z.string().optional(),
+    utm_source: z.string().optional(),
+    utm_medium: z.string().optional(),
+    utm_campaign: z.string().optional(),
+});
 
 export async function POST(req: NextRequest) {
     try {
         const body = await req.json();
+        const validation = contactSchema.safeParse(body);
+
+        if (!validation.success) {
+            return NextResponse.json({ success: false, error: "Invalid form data" }, { status: 400 });
+        }
+
         const {
             name, phone, email, eventType, date, location, message,
             referrer_url, utm_source, utm_medium, utm_campaign,
-        } = body;
+        } = validation.data;
 
         // ── 1. Send via Resend (Email) ──────────────────────────────────────────
         const resendKey = process.env.RESEND_API_KEY;
