@@ -26,7 +26,6 @@ const faqSchema = {
     "@context": "https://schema.org",
     "@type": "FAQPage",
     mainEntity: [
-        { "@type": "Question", name: "What is the cost of a wedding photographer in Mangalore?", acceptedAnswer: { "@type": "Answer", text: "Paperlight Productions' Mangalore wedding photography packages start from ₹45,000 for single-day coverage. Contact us for a personalized quote." } },
         { "@type": "Question", name: "Do you cover weddings at Blue Waters Mangalore?", acceptedAnswer: { "@type": "Answer", text: "Yes! Blue Waters Resort is one of our favorite Mangalore venues — the sea-facing backdrop makes for stunning wedding portraits." } },
         { "@type": "Question", name: "Do you travel outside Mangalore for weddings?", acceptedAnswer: { "@type": "Answer", text: "Absolutely. We cover all of Coastal Karnataka including Bantwal, Puttur, Belthangady, and destination weddings." } },
         { "@type": "Question", name: "How soon can I receive my wedding photos?", acceptedAnswer: { "@type": "Answer", text: "Edited photos are typically delivered within 3–4 weeks after your wedding. Rush delivery options are available." } },

@@ -32,7 +32,6 @@ const faqSchema = {
     "@context": "https://schema.org",
     "@type": "FAQPage",
     mainEntity: [
-        { "@type": "Question", name: "How much does a wedding photographer cost in Udupi?", acceptedAnswer: { "@type": "Answer", text: "Paperlight Productions offers wedding photography packages in Udupi starting from ₹45,000 for single-day coverage, with full wedding packages available. Contact us for a custom quote based on your event." } },
         { "@type": "Question", name: "How far in advance should I book a wedding photographer in Udupi?", acceptedAnswer: { "@type": "Answer", text: "We recommend booking at least 6–12 months in advance, especially for peak wedding season (October–February). Dates fill up quickly!" } },
         { "@type": "Question", name: "Do you cover weddings at Manipal County Club, Udupi?", acceptedAnswer: { "@type": "Answer", text: "Yes! We have extensive experience shooting at Manipal County Club, SVR Convention, and other premium Udupi venues. We know every corner for the best shots." } },
         { "@type": "Question", name: "Do you offer pre-wedding shoots in Udupi?", acceptedAnswer: { "@type": "Answer", text: "Absolutely. Udupi and surrounding areas like Kaup Beach, Malpe Beach, and Manipal Lake offer stunning backdrops for pre-wedding shoots." } },
