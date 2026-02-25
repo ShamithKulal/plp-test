@@ -14,7 +14,6 @@ const serviceLinks = [
 
 const companyLinks = [
     { label: "Portfolio", href: "/portfolio" },
-    { label: "Thank You", href: "/thank-you" },
 ];
 
 export default function Footer() {
