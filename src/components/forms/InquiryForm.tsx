@@ -23,13 +23,6 @@ const schema = z.object({
 
 type FormData = z.infer<typeof schema>;
 
-const eventTypes = [
-    "Wedding",
-    "Pre-Wedding Shoot",
-    "Haldi & Mehendi",
-    "Reception",
-    "Other",
-];
 
 interface InquiryFormProps {
     compact?: boolean;
@@ -68,6 +61,7 @@ export default function InquiryForm({ compact = false }: InquiryFormProps) {
         register,
         handleSubmit,
         setValue,
+        reset,
         formState: { errors, isSubmitting, isSubmitSuccessful },
     } = useForm<FormData>({ resolver: zodResolver(schema) });
 
@@ -89,6 +83,7 @@ export default function InquiryForm({ compact = false }: InquiryFormProps) {
                 body: JSON.stringify(data),
             });
             if (res.ok) {
+                reset();
                 router.push("/thank-you");
             }
         } catch {
@@ -131,12 +126,7 @@ export default function InquiryForm({ compact = false }: InquiryFormProps) {
             <div className={`grid gap-4 ${compact ? "grid-cols-1" : "grid-cols-1 sm:grid-cols-2"}`}>
                 <div>
                     <label className={labelClass}>Event Type *</label>
-                    <select {...register("eventType")} className={inputClass}>
-                        <option value="">Select event</option>
-                        {eventTypes.map((t) => (
-                            <option key={t} value={t}>{t}</option>
-                        ))}
-                    </select>
+                    <input {...register("eventType")} placeholder="Wedding / Corporate / Sangeet" className={inputClass} />
                     {errors.eventType && <p className={errorClass}>{errors.eventType.message}</p>}
                 </div>
                 <div>
