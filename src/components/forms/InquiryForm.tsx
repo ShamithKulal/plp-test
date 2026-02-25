@@ -84,7 +84,7 @@ export default function InquiryForm({ compact = false }: InquiryFormProps) {
             });
             if (res.ok) {
                 reset();
-                router.push("/thank-you");
+                // We'll let isSubmitSuccessful handle the success state UI
             }
         } catch {
             // silently fail – user stays on page
@@ -97,123 +97,162 @@ export default function InquiryForm({ compact = false }: InquiryFormProps) {
     const errorClass = "text-red-400 text-xs mt-1";
 
     return (
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-            {!compact && (
-                <h3 className="font-serif text-2xl text-[var(--color-text)] mb-6">
-                    Check <span className="text-gold">Availability</span>
-                </h3>
-            )}
-
-            <div className={`grid gap-4 ${compact ? "grid-cols-1" : "grid-cols-1 sm:grid-cols-2"}`}>
-                <div>
-                    <label className={labelClass}>Your Name *</label>
-                    <input {...register("name")} placeholder="Priya Sharma" className={inputClass} />
-                    {errors.name && <p className={errorClass}>{errors.name.message}</p>}
-                </div>
-                <div>
-                    <label className={labelClass}>Phone Number *</label>
-                    <input {...register("phone")} placeholder="9876543210" type="tel" className={inputClass} />
-                    {errors.phone && <p className={errorClass}>{errors.phone.message}</p>}
-                </div>
-            </div>
-
-            <div>
-                <label className={labelClass}>Email (optional)</label>
-                <input {...register("email")} placeholder="priya@example.com" type="email" className={inputClass} />
-                {errors.email && <p className={errorClass}>{errors.email.message}</p>}
-            </div>
-
-            <div className={`grid gap-4 ${compact ? "grid-cols-1" : "grid-cols-1 sm:grid-cols-2"}`}>
-                <div>
-                    <label className={labelClass}>Event Type *</label>
-                    <input {...register("eventType")} placeholder="Wedding / Corporate / Sangeet" className={inputClass} />
-                    {errors.eventType && <p className={errorClass}>{errors.eventType.message}</p>}
-                </div>
-                <div>
-                    <label className={labelClass}>Event Date *</label>
-                    <input {...register("date")} type="date" className={inputClass} style={{ colorScheme: "dark" }} />
-                    {errors.date && <p className={errorClass}>{errors.date.message}</p>}
-                </div>
-            </div>
-
-            <div>
-                <label className={labelClass}>Event Location *</label>
-                <input {...register("location")} placeholder="Udupi / Mangalore" className={inputClass} />
-                {errors.location && <p className={errorClass}>{errors.location.message}</p>}
-            </div>
-
-            <div>
-                <label className={labelClass}>Message (optional)</label>
-                <textarea
-                    {...register("message")}
-                    placeholder="Tell us a bit about your event..."
-                    rows={compact ? 3 : 4}
-                    className={`${inputClass} resize-none`}
-                />
-            </div>
-
-            {/* Hidden UTM fields */}
-            <input type="hidden" {...register("referrer_url")} />
-            <input type="hidden" {...register("utm_source")} />
-            <input type="hidden" {...register("utm_medium")} />
-            <input type="hidden" {...register("utm_campaign")} />
-
-            {/* Submit button with loading animation */}
-            <motion.button
-                type="submit"
-                disabled={isSubmitting}
-                whileHover={!isSubmitting ? { scale: 1.02 } : {}}
-                whileTap={!isSubmitting ? { scale: 0.98 } : {}}
-                style={{ position: "relative", overflow: "hidden" }}
-                className="w-full py-3.5 text-[13px] tracking-widest uppercase font-semibold bg-yellow-400 text-black disabled:cursor-not-allowed transition-colors duration-300 rounded-sm"
-            >
-                {/* Shimmer sweep overlay while loading */}
-                <AnimatePresence>
-                    {isSubmitting && (
-                        <motion.span
-                            key="shimmer"
-                            initial={{ x: "-100%" }}
-                            animate={{ x: "200%" }}
-                            exit={{ opacity: 0 }}
-                            transition={{ duration: 1.1, repeat: Infinity, ease: "linear" }}
-                            style={{
-                                position: "absolute",
-                                inset: 0,
-                                background:
-                                    "linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.45) 50%, transparent 60%)",
-                                pointerEvents: "none",
-                            }}
-                        />
-                    )}
-                </AnimatePresence>
-
-                {/* Button label with smooth crossfade */}
-                <AnimatePresence mode="wait">
-                    {isSubmitting ? (
-                        <motion.span
-                            key="loading"
-                            initial={{ opacity: 0, y: 8 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            exit={{ opacity: 0, y: -8 }}
-                            transition={{ duration: 0.2 }}
-                            style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "10px" }}
+        <div className="relative min-h-[400px]">
+            <AnimatePresence mode="wait">
+                {isSubmitSuccessful ? (
+                    <motion.div
+                        key="success"
+                        initial={{ opacity: 0, scale: 0.95 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        className="absolute inset-0 flex flex-col items-center justify-center text-center p-6 bg-[var(--color-navy)] z-20"
+                    >
+                        <motion.div
+                            initial={{ scale: 0 }}
+                            animate={{ scale: 1 }}
+                            transition={{ type: "spring", damping: 12, stiffness: 200, delay: 0.2 }}
+                            className="w-20 h-20 rounded-full bg-gold/10 border border-gold/30 flex items-center justify-center mb-6"
                         >
-                            <span style={{ fontSize: "12px", letterSpacing: "0.15em" }}>Sending</span>
-                            <LoadingDots />
-                        </motion.span>
-                    ) : (
-                        <motion.span
-                            key="idle"
-                            initial={{ opacity: 0, y: 8 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            exit={{ opacity: 0, y: -8 }}
-                            transition={{ duration: 0.2 }}
+                            <span className="text-4xl">✨</span>
+                        </motion.div>
+                        <h3 className="font-serif text-3xl text-white mb-4">Inquiry Received!</h3>
+                        <p className="text-[var(--color-muted)] leading-relaxed max-w-sm">
+                            Thank you for reaching out. We&apos;ve received your details and will get back to you within 24 hours.
+                        </p>
+                        <motion.button
+                            onClick={() => reset()}
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
+                            className="mt-8 text-[11px] tracking-widest uppercase text-gold hover:text-white transition-colors"
                         >
-                            Check Availability →
-                        </motion.span>
-                    )}
-                </AnimatePresence>
-            </motion.button>
-        </form>
+                            ← Send Another Inquiry
+                        </motion.button>
+                    </motion.div>
+                ) : (
+                    <motion.form
+                        key="form"
+                        exit={{ opacity: 0, y: -20 }}
+                        onSubmit={handleSubmit(onSubmit)}
+                        className="space-y-4"
+                    >
+                        {!compact && (
+                            <h3 className="font-serif text-2xl text-[var(--color-text)] mb-6">
+                                Check <span className="text-gold">Availability</span>
+                            </h3>
+                        )}
+
+                        <div className={`grid gap-4 ${compact ? "grid-cols-1" : "grid-cols-1 sm:grid-cols-2"}`}>
+                            <div>
+                                <label className={labelClass}>Your Name *</label>
+                                <input {...register("name")} placeholder="Priya Sharma" className={inputClass} />
+                                {errors.name && <p className={errorClass}>{errors.name.message}</p>}
+                            </div>
+                            <div>
+                                <label className={labelClass}>Phone Number *</label>
+                                <input {...register("phone")} placeholder="9876543210" type="tel" className={inputClass} />
+                                {errors.phone && <p className={errorClass}>{errors.phone.message}</p>}
+                            </div>
+                        </div>
+
+                        <div>
+                            <label className={labelClass}>Email (optional)</label>
+                            <input {...register("email")} placeholder="priya@example.com" type="email" className={inputClass} />
+                            {errors.email && <p className={errorClass}>{errors.email.message}</p>}
+                        </div>
+
+                        <div className={`grid gap-4 ${compact ? "grid-cols-1" : "grid-cols-1 sm:grid-cols-2"}`}>
+                            <div>
+                                <label className={labelClass}>Event Type *</label>
+                                <input {...register("eventType")} placeholder="Wedding / Corporate / Sangeet" className={inputClass} />
+                                {errors.eventType && <p className={errorClass}>{errors.eventType.message}</p>}
+                            </div>
+                            <div>
+                                <label className={labelClass}>Event Date *</label>
+                                <input {...register("date")} type="date" className={inputClass} style={{ colorScheme: "dark" }} />
+                                {errors.date && <p className={errorClass}>{errors.date.message}</p>}
+                            </div>
+                        </div>
+
+                        <div>
+                            <label className={labelClass}>Event Location *</label>
+                            <input {...register("location")} placeholder="Udupi / Mangalore" className={inputClass} />
+                            {errors.location && <p className={errorClass}>{errors.location.message}</p>}
+                        </div>
+
+                        <div>
+                            <label className={labelClass}>Message (optional)</label>
+                            <textarea
+                                {...register("message")}
+                                placeholder="Tell us a bit about your event..."
+                                rows={compact ? 3 : 4}
+                                className={`${inputClass} resize-none`}
+                            />
+                        </div>
+
+                        {/* Hidden UTM fields */}
+                        <input type="hidden" {...register("referrer_url")} />
+                        <input type="hidden" {...register("utm_source")} />
+                        <input type="hidden" {...register("utm_medium")} />
+                        <input type="hidden" {...register("utm_campaign")} />
+
+                        {/* Submit button with loading animation */}
+                        <motion.button
+                            type="submit"
+                            disabled={isSubmitting}
+                            whileHover={!isSubmitting ? { scale: 1.02 } : {}}
+                            whileTap={!isSubmitting ? { scale: 0.98 } : {}}
+                            style={{ position: "relative", overflow: "hidden" }}
+                            className="w-full py-3.5 text-[13px] tracking-widest uppercase font-semibold bg-yellow-400 text-black disabled:cursor-not-allowed transition-colors duration-300 rounded-sm"
+                        >
+                            {/* Shimmer sweep overlay while loading */}
+                            <AnimatePresence>
+                                {isSubmitting && (
+                                    <motion.span
+                                        key="shimmer"
+                                        initial={{ x: "-100%" }}
+                                        animate={{ x: "200%" }}
+                                        exit={{ opacity: 0 }}
+                                        transition={{ duration: 1.1, repeat: Infinity, ease: "linear" }}
+                                        style={{
+                                            position: "absolute",
+                                            inset: 0,
+                                            background:
+                                                "linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.45) 50%, transparent 60%)",
+                                            pointerEvents: "none",
+                                        }}
+                                    />
+                                )}
+                            </AnimatePresence>
+
+                            {/* Button label with smooth crossfade */}
+                            <AnimatePresence mode="wait">
+                                {isSubmitting ? (
+                                    <motion.span
+                                        key="loading"
+                                        initial={{ opacity: 0, y: 8 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        exit={{ opacity: 0, y: -8 }}
+                                        transition={{ duration: 0.2 }}
+                                        style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "10px" }}
+                                    >
+                                        <span style={{ fontSize: "12px", letterSpacing: "0.15em" }}>Sending</span>
+                                        <LoadingDots />
+                                    </motion.span>
+                                ) : (
+                                    <motion.span
+                                        key="idle"
+                                        initial={{ opacity: 0, y: 8 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        exit={{ opacity: 0, y: -8 }}
+                                        transition={{ duration: 0.2 }}
+                                    >
+                                        Check Availability →
+                                    </motion.span>
+                                )}
+                            </AnimatePresence>
+                        </motion.button>
+                    </motion.form>
+                )}
+            </AnimatePresence>
+        </div>
     );
 }
