@@ -62,8 +62,10 @@ export default function Navbar() {
           .plp-nav-hamburger { display: none; }
           .plp-nav-cta { display: inline-flex; }
         }
-        .plp-nav-link { font-size: 11px; letter-spacing: 0.12em; color: #ffffff; text-decoration: none; text-transform: uppercase; transition: color 0.3s; }
+        .plp-nav-link { font-size: 11px; letter-spacing: 0.12em; color: rgba(255,255,255,0.7); text-decoration: none; text-transform: uppercase; transition: all 0.3s; position: relative; }
         .plp-nav-link:hover { color: #fff; }
+        .plp-nav-link.active { color: #F5A623; }
+        .plp-nav-link.active::after { content: ''; position: absolute; bottom: -6px; left: 50%; transform: translateX(-50%); width: 4px; height: 4px; border-radius: 50%; background: #F5A623; }
         .plp-cta-btn { padding: 10px 20px; font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; font-weight: 600; border: 1px solid #F5A623; color: #F5A623; text-decoration: none; border-radius: 2px; transition: background 0.3s, color 0.3s; }
         .plp-cta-btn:hover { background: #F5A623; color: #0D1B3E; }
       `}</style>
@@ -115,7 +117,7 @@ export default function Navbar() {
                             <Link
                                 key={link.href}
                                 href={link.href}
-                                className="plp-nav-link"
+                                className={`plp-nav-link ${pathname === link.href ? "active" : ""}`}
                                 onClick={(e) => handleNavClick(e, link.href)}
                             >
                                 {link.label}
@@ -189,7 +191,7 @@ export default function Navbar() {
                                         padding: "16px 0",
                                         fontSize: "24px",
                                         fontFamily: "var(--font-playfair), Georgia, serif",
-                                        color: "white",
+                                        color: pathname === link.href ? "#F5A623" : "white",
                                         textDecoration: "none",
                                         borderBottom: "1px solid #1E3170",
                                     }}
