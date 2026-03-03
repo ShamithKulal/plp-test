@@ -11,6 +11,9 @@ const locations = [
     "Kudlu Falls",
     "Agumbe Rainforest",
     "Mangalore Beach Road",
+    "Manipal Lake",
+    "St. Mary's Island",
+    "Kollur Forest Trail",
 ];
 
 export default function PreWeddingPage() {
