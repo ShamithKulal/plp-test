@@ -1,0 +1,197 @@
+╔══════════════════════════════════════════════════════════════════╗
+║                                                                  ║
+║            MIGRATION QUICK REFERENCE CARD                       ║
+║        Cloudinary → GitHub + jsDelivr                           ║
+║                                                                  ║
+╚══════════════════════════════════════════════════════════════════╝
+
+📁 FILES CREATED FOR YOU
+════════════════════════════════════════════════════════════════════
+
+1. MIGRATION_GUIDE.sh
+   → Complete step-by-step guide (READ THIS FIRST!)
+   → Usage: ./MIGRATION_GUIDE.sh
+
+2. migrate-to-github-images.sh
+   → Sets up Git branches and directory structure
+   → Usage: ./migrate-to-github-images.sh
+
+3. download-cloudinary-images.sh
+   → Downloads images from Cloudinary (optional)
+   → Usage: ./download-cloudinary-images.sh
+
+4. upload-to-github-images.sh
+   → Uploads images to new GitHub repository
+   → Usage: ./upload-to-github-images.sh
+
+5. update-code-to-github.sh
+   → Replaces Cloudinary URLs with GitHub + jsDelivr
+   → Usage: ./update-code-to-github.sh
+
+════════════════════════════════════════════════════════════════════
+⚡ QUICK START (3 COMMANDS)
+════════════════════════════════════════════════════════════════════
+
+Step 1: Setup branches
+  ./migrate-to-github-images.sh
+
+Step 2: Create GitHub repo manually
+  Go to: https://github.com/new
+  Name: plp-images
+  Visibility: PUBLIC ⚠️
+  Click "Create repository"
+
+Step 3: Upload images & update code
+  ./upload-to-github-images.sh
+  ./update-code-to-github.sh
+
+Step 4: Test, commit, push
+  npm run dev  # Test locally
+  git add .
+  git commit -m "Migrate to GitHub + jsDelivr"
+  git push origin github-images-integration
+
+════════════════════════════════════════════════════════════════════
+🎯 THE NEW ARCHITECTURE
+════════════════════════════════════════════════════════════════════
+
+BEFORE (Cloudinary):
+┌─────────────────────────────────────────────────────────┐
+│  antigravity (repo)                                     │
+│  ├── src/                                               │
+│  ├── public/                                            │
+│  └── code references Cloudinary URLs                    │
+│      ↓ fetches from                                     │
+│  Cloudinary CDN (rate limited, 420 errors)              │
+└─────────────────────────────────────────────────────────┘
+
+AFTER (GitHub + jsDelivr):
+┌─────────────────────────────────────────────────────────┐
+│  antigravity (repo)           plp-images (repo) │
+│  ├── src/                     ├── portfolio/            │
+│  ├── public/                  │   ├── photo1.jpg        │
+│  └── code with jsDelivr URLs  │   └── photo2.jpg        │
+│      ↓ fetches from           │                         │
+│  jsDelivr CDN (unlimited, free, fast)                   │
+└─────────────────────────────────────────────────────────┘
+
+Benefits:
+  ✅ Code repo stays small (fast git operations)
+  ✅ Images in separate repo (easy to manage)
+  ✅ No rate limits ever
+  ✅ Global CDN (jsDelivr)
+  ✅ 100% free forever
+
+════════════════════════════════════════════════════════════════════
+📝 URL FORMAT EXAMPLES
+════════════════════════════════════════════════════════════════════
+
+Old Cloudinary URL:
+  https://res.cloudinary.com/yourcloud/image/upload/v1234/portfolio/sunset.jpg
+
+New jsDelivr URL:
+  https://cdn.jsdelivr.net/gh/USERNAME/plp-images@main/portfolio/sunset.jpg
+
+In your React/JS code:
+
+// Before
+const images = [
+  'https://res.cloudinary.com/xyz/image/upload/v123/portfolio/photo1.jpg',
+  'https://res.cloudinary.com/xyz/image/upload/v123/portfolio/photo2.jpg',
+]
+
+// After
+const baseURL = 'https://cdn.jsdelivr.net/gh/USERNAME/plp-images@main/portfolio';
+const images = [
+  `${baseURL}/photo1.jpg`,
+  `${baseURL}/photo2.jpg`,
+]
+
+════════════════════════════════════════════════════════════════════
+🔧 COMMON COMMANDS
+════════════════════════════════════════════════════════════════════
+
+View current branch:
+  git branch --show-current
+
+Switch branches:
+  git checkout backoffice-portfolio
+  git checkout github-images-integration
+
+See modified files:
+  git status
+
+Compare files:
+  diff file.js file.js.original
+
+Test before committing:
+  npm run dev
+  # Check http://localhost:XXXX
+
+Commit changes:
+  git add .
+  git commit -m "Your message"
+  git push origin github-images-integration
+
+Rollback if needed:
+  git checkout backoffice-portfolio
+  git branch -D github-images-integration
+
+════════════════════════════════════════════════════════════════════
+⚠️  IMPORTANT REMINDERS
+════════════════════════════════════════════════════════════════════
+
+1. ⚠️  plp-images repository MUST be PUBLIC
+   Private repos don't work with jsDelivr CDN
+
+2. ⚠️  First time may take 5 minutes
+   jsDelivr needs to index your new repository
+   After that, it's instant (cached globally)
+
+3. ⚠️  File names are case-sensitive
+   photo.jpg ≠ Photo.jpg ≠ PHOTO.jpg
+
+4. ⚠️  Always test locally before pushing
+   npm run dev → check all images load
+
+5. ⚠️  Keep image repo separate
+   Don't put images in your code repository
+
+════════════════════════════════════════════════════════════════════
+🆘 HELP & TROUBLESHOOTING
+════════════════════════════════════════════════════════════════════
+
+Images not loading?
+  → Check if repo is PUBLIC
+  → Wait 5 minutes for jsDelivr to index
+  → Verify URL format exactly matches
+  → Check browser console for errors
+
+Scripts won't run?
+  chmod +x migrate-to-github-images.sh
+  chmod +x download-cloudinary-images.sh
+  chmod +x upload-to-github-images.sh
+  chmod +x update-code-to-github.sh
+
+Need to start over?
+  git checkout backoffice-portfolio
+  git branch -D github-images-integration
+  # Then run ./migrate-to-github-images.sh again
+
+════════════════════════════════════════════════════════════════════
+📞 NEXT STEPS
+════════════════════════════════════════════════════════════════════
+
+1. Read the full guide:
+   ./MIGRATION_GUIDE.sh
+
+2. Or jump straight in:
+   ./migrate-to-github-images.sh
+
+3. Questions? Check MIGRATION_SUMMARY.md (created after step 5)
+
+════════════════════════════════════════════════════════════════════
+
+🚀 Ready to migrate? Start here: ./MIGRATION_GUIDE.sh
+
+════════════════════════════════════════════════════════════════════

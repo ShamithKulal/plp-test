@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { CldImage } from "next-cloudinary";
-import { getCloudinaryImages } from "./actions";
+import Image from "next/image";
+import { getGitHubImages } from "./actions";
 
 export default function GalleryPage() {
     const [images, setImages] = useState<any[]>([]);
@@ -12,7 +12,7 @@ export default function GalleryPage() {
     useEffect(() => {
         async function fetchImages() {
             try {
-                const result = await getCloudinaryImages();
+                const result = await getGitHubImages();
                 if (result.success) {
                     setImages(result.images);
                 } else {
@@ -40,10 +40,10 @@ export default function GalleryPage() {
     return (
         <main className="min-h-screen pt-32 pb-24 px-6 md:px-12 max-w-7xl mx-auto">
             <section className="text-center mb-16">
-                <p className="text-[11px] tracking-[0.4em] uppercase text-gold mb-3">Cloudinary Integration</p>
+                <p className="text-[11px] tracking-[0.4em] uppercase text-gold mb-3">GitHub Integration</p>
                 <h1 className="font-serif text-5xl md:text-6xl text-[var(--color-text)] mb-4">Live Gallery</h1>
                 <p className="text-[var(--color-muted)] max-w-md mx-auto text-sm">
-                    These images are fetched and optimized dynamically from your Cloudinary Media Library.
+                    These images are fetched and optimized dynamically from the `plp-images` origin repository.
                 </p>
             </section>
 
@@ -60,8 +60,8 @@ export default function GalleryPage() {
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                     {images.map((file) => (
                         <div key={file.public_id} className="relative aspect-square overflow-hidden bg-[var(--color-surface)] border border-[var(--color-border)] group">
-                            {/* CldImage automatically compresses and serves images in next-gen formats */}
-                            <CldImage
+                            {/* Rendering fast CDN images */}
+                            <Image
                                 src={file.public_id}
                                 alt="Gallery Image"
                                 fill
@@ -69,7 +69,7 @@ export default function GalleryPage() {
                                 sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
                             />
                             <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 to-transparent p-4 translate-y-full group-hover:translate-y-0 transition-transform duration-300">
-                                <p className="text-xs text-white truncate text-center uppercase tracking-widest">{file.format} · {Math.round(file.bytes / 1024)} KB</p>
+                                <p className="text-xs text-white truncate text-center uppercase tracking-widest">{file.format || 'IMAGE'} · {Math.round(file.bytes / 1024)} KB</p>
                             </div>
                         </div>
                     ))}

@@ -1,19 +1,50 @@
 "use server";
 
-import cloudinary from "@/lib/cloudinary";
+const GITHUB_REPO = "shamithkulal/plp-images";
+const GITHUB_BRANCH = "main";
+const JSDELIVR_BASE = `https://cdn.jsdelivr.net/gh/${GITHUB_REPO}@${GITHUB_BRANCH}`;
 
-export async function getCloudinaryImages() {
+export async function getGitHubImages() {
     try {
-        const result = await cloudinary.api.resources({
-            type: 'upload',
-            max_results: 100,
+        // Use the Git Trees API to get all files recursively
+        const url = `https://api.github.com/repos/${GITHUB_REPO}/git/trees/${GITHUB_BRANCH}?recursive=1`;
+        
+        const headers: HeadersInit = {
+            'Accept': 'application/vnd.github.v3+json',
+            'User-Agent': 'Paperlight-NextJS-App'
+        };
+        
+        if (process.env.GITHUB_TOKEN) {
+            headers['Authorization'] = `token ${process.env.GITHUB_TOKEN}`;
+        }
+
+        const res = await fetch(url, {
+            headers,
+            next: { revalidate: 3600 }
         });
 
-        // Filter out any potential non-image files or folders
-        const images = result.resources.filter((res: any) => res.format !== undefined);
+        if (!res.ok) throw new Error(`GitHub API Error: ${res.status}`);
+        
+        const data = await res.json();
+        
+        // Filter out directories and non-images
+        const images = data.tree
+            .filter((item: any) => {
+                if (item.type !== "blob") return false;
+                const ext = item.path.split('.').pop()?.toLowerCase();
+                return ['jpg', 'jpeg', 'png', 'webp', 'gif'].includes(ext || '');
+            })
+            // Limit to first 100 for the gallery
+            .slice(0, 100)
+            .map((item: any) => ({
+                public_id: `${JSDELIVR_BASE}/${item.path}`,
+                format: item.path.split('.').pop()?.toLowerCase(),
+                bytes: item.size || 0
+            }));
+
         return { success: true, images };
     } catch (error) {
-        console.error("Error fetching from Cloudinary:", error);
+        console.error("Error fetching from GitHub Trees API:", error);
         return { success: false, images: [] };
     }
 }

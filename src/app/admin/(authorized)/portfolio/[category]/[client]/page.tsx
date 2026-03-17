@@ -26,17 +26,22 @@ export default async function ClientPortfolioPage({ params }: { params: Promise<
                     <h2 className="text-xl font-serif text-white capitalize">{client.replace(/-/g, ' ')}&apos;s Photos</h2>
                     <p className="text-sm text-[var(--color-muted)] mt-1 font-mono text-[11px]">{folderPath}</p>
                 </div>
-                <UploadWidget folderPath={folderPath} />
+                <div className="flex items-center gap-4">
+                    <div className="hidden md:flex bg-[var(--color-surface)] border border-[var(--color-border)] rounded-sm overflow-hidden text-sm h-[40px]">
+                        <span className="px-4 py-2 text-[var(--color-muted)] whitespace-nowrap leading-tight flex items-center">GitHub Integration Active</span>
+                    </div>
+                    <UploadWidget folderPath={folderPath} />
+                </div>
             </div>
 
             {!success ? (
                 <div className="p-4 border border-red-500/30 bg-red-500/10 text-red-500 text-sm rounded-sm">
-                    Failed to load images from Cloudinary.
+                    Failed to load images from GitHub.
                 </div>
             ) : images?.length === 0 ? (
                 <div className="text-center py-32 border border-dashed border-[var(--color-border)] rounded-sm bg-[var(--color-surface)]/50">
                     <p className="text-xl font-serif text-[var(--color-muted)]">This folder is empty.</p>
-                    <p className="text-sm text-[var(--color-muted)] mt-3 max-w-sm mx-auto">Click &quot;Upload Photos&quot; above to launch the Cloudinary uploader. You can select multiple images at once.</p>
+                    <p className="text-sm text-[var(--color-muted)] mt-3 max-w-sm mx-auto">Click &quot;Upload Photos&quot; above to add images directly to your GitHub repository.</p>
                 </div>
             ) : (
                 <AdminImageGrid images={images} deleteServerAction={deleteImage} />

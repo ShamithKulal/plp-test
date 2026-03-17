@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback, useMemo } from "react";
-import { CldImage } from "next-cloudinary";
+import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, ChevronLeft, ChevronRight, ArrowLeft } from "lucide-react";
 
@@ -126,7 +126,7 @@ export default function PortfolioClient({ portfolioData }: { portfolioData: Cate
 
                                 {/* Cover image */}
                                 <div className="relative h-72">
-                                    <CldImage
+                                    <Image
                                         src={subject.coverImage}
                                         alt={subject.name}
                                         fill
@@ -214,7 +214,7 @@ export default function PortfolioClient({ portfolioData }: { portfolioData: Cate
                                     transition={{ duration: 0.28 }}
                                     className="relative w-full h-full max-h-[70vh]"
                                 >
-                                    <CldImage
+                                    <Image
                                         src={activeSubject.images[galleryIndex]}
                                         alt={`${activeSubject.name} – photo ${galleryIndex + 1}`}
                                         fill
@@ -257,7 +257,7 @@ export default function PortfolioClient({ portfolioData }: { portfolioData: Cate
                                             : "border-white/10 opacity-50 hover:opacity-80"
                                             }`}
                                     >
-                                        <CldImage
+                                        <Image
                                             src={img}
                                             alt={`thumb ${idx + 1}`}
                                             fill
