@@ -1,160 +1,33 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
-import Image from "next/image";
+import { useState, useEffect, useCallback, useMemo } from "react";
+import { CldImage } from "next-cloudinary";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, ChevronLeft, ChevronRight, ArrowLeft } from "lucide-react";
 
 // ─── Data ────────────────────────────────────────────────────────────────────
 
-type Subject = {
-    id: number;
+export type Subject = {
+    id: string; // use Cloudinary path as ID
     name: string;
     location: string;
-    coverImage: string;
-    images: string[];
+    coverImage: string; // Cloudinary public_id
+    images: string[];   // Array of Cloudinary public_ids
 };
 
-type CategoryData = {
+export type CategoryData = {
     label: string;
     subjects: Subject[];
 };
 
-const portfolioData: CategoryData[] = [
-    {
-        label: "Pre-Wedding",
-        subjects: [
-            {
-                id: 5,
-                name: "Prakash & Sonal",
-                location: "Beach",
-                coverImage: "/prewedding/prakash-sonal-beach/PP-002_2_11zon.jpg",
-                images: [
-                    "/prewedding/prakash-sonal-beach/PP-002_2_11zon.jpg",
-                    "/prewedding/prakash-sonal-beach/PP-012_3_11zon.jpg",
-                    "/prewedding/prakash-sonal-beach/PP-014_4_11zon.jpg",
-                    "/prewedding/prakash-sonal-beach/PP-028_5_11zon.jpg",
-                    "/prewedding/prakash-sonal-beach/PP-035_6_11zon.jpg",
-                    "/prewedding/prakash-sonal-beach/PP-037_7_11zon.jpg",
-                    "/prewedding/prakash-sonal-beach/PP-045_8_11zon.jpg",
-                ],
-            },
-            {
-                id: 6,
-                name: "Prakash & Sonal",
-                location: "Heritage House",
-                coverImage: "/prewedding/prakash-sonal-heritage/PP-057_1_11zon.jpg",
-                images: [
-                    "/prewedding/prakash-sonal-heritage/PP-057_1_11zon.jpg",
-                    "/prewedding/prakash-sonal-heritage/PP-064_2_11zon.jpg",
-                    "/prewedding/prakash-sonal-heritage/PP-070_3_11zon.jpg",
-                    "/prewedding/prakash-sonal-heritage/PP-072_4_11zon.jpg",
-                    "/prewedding/prakash-sonal-heritage/PP-077_5_11zon.jpg",
-                    "/prewedding/prakash-sonal-heritage/PP-082_6_11zon.jpg",
-                ],
-            },
-            {
-                id: 7,
-                name: "Prakash & Sonal",
-                location: "Traditional",
-                coverImage: "/prewedding/prakash-sonal-traditional/PP-131_3_11zon.jpg",
-                images: [
-                    "/prewedding/prakash-sonal-traditional/PP-122_1_11zon.jpg",
-                    "/prewedding/prakash-sonal-traditional/PP-130_2_11zon.jpg",
-                    "/prewedding/prakash-sonal-traditional/PP-131_3_11zon.jpg",
-                    "/prewedding/prakash-sonal-traditional/PP-136_4_11zon.jpg",
-                    "/prewedding/prakash-sonal-traditional/PP-137_5_11zon.jpg",
-                    "/prewedding/prakash-sonal-traditional/PP-138_6_11zon.jpg",
-                    "/prewedding/prakash-sonal-traditional/PP-143_7_11zon.jpg",
-                ],
-            },
-        ],
-    },
-    {
-        label: "Haldi & Mehendi",
-        subjects: [
-            {
-                id: 11,
-                name: "Poojitha",
-                location: "Haldi",
-                coverImage: "/haldi-mehandi/poojitha-haldi/DSC00081_11zon.jpg",
-                images: [
-                    "/haldi-mehandi/poojitha-haldi/DSC00081_11zon.jpg",
-                    "/haldi-mehandi/poojitha-haldi/IMG_6196_1_11zon.jpg",
-                    "/haldi-mehandi/poojitha-haldi/IMG_6231_2_11zon.jpg",
-                    "/haldi-mehandi/poojitha-haldi/IMG_6441_3_11zon.jpg",
-                    "/haldi-mehandi/poojitha-haldi/IMG_5760_6_11zon.jpg",
-                    "/haldi-mehandi/poojitha-haldi/IMG_5955_7_11zon.jpg",
-                    "/haldi-mehandi/poojitha-haldi/IMG_6025_8_11zon.jpg",
-                    "/haldi-mehandi/poojitha-haldi/IMG_6050_9_11zon.jpg",
-                    "/haldi-mehandi/poojitha-haldi/IMG_6134_10_11zon.jpg",
-                    "/haldi-mehandi/poojitha-haldi/IMG_6196_11_11zon.jpg",
-                ],
-            },
-            {
-                id: 12,
-                name: "Poojitha",
-                location: "Mehandi",
-                coverImage: "/haldi-mehandi/poojitha-mehandi/DSC00873_1_11zon.jpg",
-                images: [
-                    "/haldi-mehandi/poojitha-mehandi/DSC00873_1_11zon.jpg",
-                    "/haldi-mehandi/poojitha-mehandi/IMG_6497_2_11zon.jpg",
-                    "/haldi-mehandi/poojitha-mehandi/IMG_6518_3_11zon.jpg",
-                    "/haldi-mehandi/poojitha-mehandi/IMG_6541_4_11zon.jpg",
-                    "/haldi-mehandi/poojitha-mehandi/IMG_6578_5_11zon.jpg",
-                    "/haldi-mehandi/poojitha-mehandi/IMG_6614_6_11zon.jpg",
-                    "/haldi-mehandi/poojitha-mehandi/IMG_6670_1_11zon.jpg",
-                    "/haldi-mehandi/poojitha-mehandi/IMG_6884_2_11zon.jpg",
-                    "/haldi-mehandi/poojitha-mehandi/IMG_6940_3_11zon.jpg",
-                ],
-            },
-        ],
-    },
-    {
-        label: "House Warming",
-        subjects: [
-            {
-                id: 13,
-                name: "SIRI",
-                location: "Udupi",
-                coverImage: "/house-warming/siri/IMG_8287_3_11zon.jpg",
-                images: [
-                    "/house-warming/siri/DSC04448_1_11zon.jpg",
-                    "/house-warming/siri/DSC04670_2_11zon.jpg",
-                    "/house-warming/siri/DSC04678_3_11zon.jpg",
-                    "/house-warming/siri/DSC05775_4_11zon.jpg",
-                    "/house-warming/siri/IMG_4251_5_11zon.jpg",
-                    "/house-warming/siri/IMG_4262_1_11zon.jpg",
-                    "/house-warming/siri/IMG_8253_2_11zon.jpg",
-                    "/house-warming/siri/IMG_8287_3_11zon.jpg",
-                    "/house-warming/siri/IMG_8312_4_11zon.jpg",
-                ],
-            },
-            {
-                id: 14,
-                name: "Pritham",
-                location: "Udupi",
-                coverImage: "/house-warming/pritham/IMG_0134_2_11zon.jpg",
-                images: [
-                    "/house-warming/pritham/IMG_0035_1_11zon.jpg",
-                    "/house-warming/pritham/IMG_0134_2_11zon.jpg",
-                    "/house-warming/pritham/IMG_8720_3_11zon.jpg",
-                    "/house-warming/pritham/IMG_8754_4_11zon.jpg",
-                    "/house-warming/pritham/IMG_9742_5_11zon.jpg",
-                ],
-            },
-        ],
-    },
-];
-
-const ALL_CATEGORIES = ["All", ...portfolioData.map((c) => c.label)];
-
 // ─── Component ────────────────────────────────────────────────────────────────
 
-export default function PortfolioPage() {
+export default function PortfolioClient({ portfolioData }: { portfolioData: CategoryData[] }) {
     const [activeCategory, setActiveCategory] = useState("All");
     const [activeSubject, setActiveSubject] = useState<(Subject & { categoryLabel: string }) | null>(null);
     const [galleryIndex, setGalleryIndex] = useState(0);
+
+    const ALL_CATEGORIES = useMemo(() => ["All", ...portfolioData.map((c) => c.label)], [portfolioData]);
 
     // Subjects visible in the current category view
     const visibleSubjects =
@@ -224,7 +97,13 @@ export default function PortfolioPage() {
             </div>
 
             {/* ── Subject Grid ── */}
-            <div className="max-w-7xl mx-auto px-6 pb-24">
+            <div className="max-w-7xl mx-auto px-6 pb-24 min-h-[50vh]">
+                {visibleSubjects.length === 0 && (
+                    <div className="text-center py-20 border border-[var(--color-border)] rounded-sm">
+                        <p className="text-xl text-[var(--color-muted)]">No portfolio entries found.</p>
+                        <p className="text-sm text-[var(--color-muted)] mt-2">Log in to the Admin Dashboard to add clients and photos!</p>
+                    </div>
+                )}
                 <motion.div layout className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                     <AnimatePresence mode="popLayout">
                         {visibleSubjects.map((subject) => (
@@ -247,7 +126,7 @@ export default function PortfolioPage() {
 
                                 {/* Cover image */}
                                 <div className="relative h-72">
-                                    <Image
+                                    <CldImage
                                         src={subject.coverImage}
                                         alt={subject.name}
                                         fill
@@ -335,7 +214,7 @@ export default function PortfolioPage() {
                                     transition={{ duration: 0.28 }}
                                     className="relative w-full h-full max-h-[70vh]"
                                 >
-                                    <Image
+                                    <CldImage
                                         src={activeSubject.images[galleryIndex]}
                                         alt={`${activeSubject.name} – photo ${galleryIndex + 1}`}
                                         fill
@@ -378,7 +257,7 @@ export default function PortfolioPage() {
                                             : "border-white/10 opacity-50 hover:opacity-80"
                                             }`}
                                     >
-                                        <Image
+                                        <CldImage
                                             src={img}
                                             alt={`thumb ${idx + 1}`}
                                             fill
