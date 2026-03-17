@@ -64,10 +64,10 @@ export default function Navbar() {
         }
         .plp-nav-link { font-size: 11px; letter-spacing: 0.12em; color: rgba(255,255,255,0.7); text-decoration: none; text-transform: uppercase; transition: all 0.3s; position: relative; }
         .plp-nav-link:hover { color: #fff; }
-        .plp-nav-link.active { color: #22c55e; }
-        .plp-nav-link.active::after { content: ''; position: absolute; bottom: -6px; left: 50%; transform: translateX(-50%); width: 4px; height: 4px; border-radius: 50%; background: #22c55e; }
-        .plp-cta-btn { padding: 10px 20px; font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; font-weight: 600; border: 1px solid #22c55e; color: #22c55e; text-decoration: none; border-radius: 2px; transition: background 0.3s, color 0.3s; }
-        .plp-cta-btn:hover { background: #22c55e; color: #0D1B3E; }
+        .plp-nav-link.active { color: #D4AF37; }
+        .plp-nav-link.active::after { content: ''; position: absolute; bottom: -6px; left: 50%; transform: translateX(-50%); width: 4px; height: 4px; border-radius: 50%; background: #D4AF37; }
+        .plp-cta-btn { padding: 10px 20px; font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; font-weight: 600; border: 1px solid #D4AF37; color: #D4AF37; text-decoration: none; border-radius: 2px; transition: background 0.3s, color 0.3s; }
+        .plp-cta-btn:hover { background: #D4AF37; color: #0D1B3E; }
       `}</style>
 
             <header
@@ -81,7 +81,7 @@ export default function Navbar() {
                     background: scrolled ? "rgba(13,27,62,0.88)" : "transparent",
                     backdropFilter: scrolled ? "blur(20px)" : "none",
                     WebkitBackdropFilter: scrolled ? "blur(20px)" : "none",
-                    borderBottom: scrolled ? "1px solid rgba(34,197,94,0.15)" : "1px solid transparent",
+                    borderBottom: scrolled ? "1px solid rgba(212,175,55,0.15)" : "1px solid transparent",
                     padding: scrolled ? "10px 0" : "18px 0",
                 }}
             >
@@ -191,7 +191,7 @@ export default function Navbar() {
                                         padding: "16px 0",
                                         fontSize: "24px",
                                         fontFamily: "var(--font-playfair), Georgia, serif",
-                                        color: pathname === link.href ? "#22c55e" : "white",
+                                        color: pathname === link.href ? "#D4AF37" : "white",
                                         textDecoration: "none",
                                         borderBottom: "1px solid #1E3170",
                                     }}
@@ -217,8 +217,8 @@ export default function Navbar() {
                                     letterSpacing: "0.2em",
                                     textTransform: "uppercase",
                                     fontWeight: 600,
-                                    border: "1px solid #22c55e",
-                                    color: "#22c55e",
+                                    border: "1px solid #D4AF37",
+                                    color: "#D4AF37",
                                     textDecoration: "none",
                                 }}
                             >
