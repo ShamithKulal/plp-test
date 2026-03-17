@@ -32,7 +32,7 @@ export default function GalleryPage() {
         return (
             <div className="pt-32 pb-24 text-center px-6 min-h-screen">
                 <h1 className="font-serif text-3xl text-red-500 mb-4">Configuration Required</h1>
-                <p className="text-[var(--color-muted)]">Please ensure your Cloudinary credentials are correct.</p>
+                <p className="text-[var(--color-muted)]">Please ensure your GitHub credentials are correct.</p>
             </div>
         );
     }
@@ -54,7 +54,7 @@ export default function GalleryPage() {
             ) : images.length === 0 ? (
                 <div className="text-center py-20 border border-[var(--color-border)] rounded-sm">
                     <p className="text-xl text-[var(--color-muted)]">No images found.</p>
-                    <p className="text-sm text-[var(--color-muted)] mt-2">Upload some images to your Cloudinary Media Library!</p>
+                    <p className="text-sm text-[var(--color-muted)] mt-2">Upload some images to your GitHub Repository!</p>
                 </div>
             ) : (
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">

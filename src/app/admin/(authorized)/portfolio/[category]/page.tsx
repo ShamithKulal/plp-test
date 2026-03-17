@@ -8,7 +8,7 @@ export const revalidate = 0;
 export default async function CategoryPage({ params }: { params: Promise<{ category: string }> }) {
     const { category } = await params;
     
-    // Cloudinary path for this category
+    // GitHub path for this category
     const path = `portfolio/${category}`;
     const { success, folders: clients } = await getFolders(path);
 
