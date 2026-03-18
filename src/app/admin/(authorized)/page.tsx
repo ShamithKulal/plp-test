@@ -38,7 +38,7 @@ export default async function AdminDashboardPage() {
 
             <div className="bg-[var(--color-surface)] border border-[var(--color-border)] p-8 rounded-sm text-center">
                 <h3 className="text-xl font-serif text-white mb-3">Manage Your Portfolio</h3>
-                <p className="text-sm text-[var(--color-muted)] max-w-md mx-auto mb-6">Create new categories, add clients, and upload your latest High-Resolution photography straight to Cloudinary.</p>
+                <p className="text-sm text-[var(--color-muted)] max-w-md mx-auto mb-6">Create new categories, add clients, and upload your latest High-Resolution photography straight to GitHub.</p>
                 <Link href="/admin/portfolio" className="inline-block bg-white text-black px-6 py-3 text-sm font-medium tracking-wide hover:bg-white/90 transition-colors rounded-sm">
                     Open Portfolio Manager
                 </Link>

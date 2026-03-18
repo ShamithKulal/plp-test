@@ -23,9 +23,9 @@ export default async function AdminDashboard() {
                         await createFolder(`portfolio/${slug}`);
                         revalidatePath('/admin/portfolio');
                     }
-                }} className="flex gap-2">
-                    <input type="text" name="category" placeholder="New Category Name" required className="bg-[#111] border border-[var(--color-border)] px-4 py-2 text-sm text-white focus:border-gold outline-none rounded-sm" />
-                    <button type="submit" className="bg-gold text-[#0F0F0F] px-4 py-2 hover:bg-white transition-colors font-semibold text-sm rounded-sm whitespace-nowrap">
+                }} className="flex flex-wrap gap-2 w-full md:w-auto">
+                    <input type="text" name="category" placeholder="New Category Name" required className="flex-1 min-w-[150px] bg-[#111] border border-[var(--color-border)] px-4 py-2 text-sm text-white focus:border-gold outline-none rounded-sm block w-full md:w-auto" />
+                    <button type="submit" className="bg-gold text-[#0F0F0F] px-4 py-2 hover:bg-white transition-colors font-semibold text-sm rounded-sm whitespace-nowrap block w-full md:w-auto">
                         Add Category
                     </button>
                 </form>
@@ -46,7 +46,7 @@ export default async function AdminDashboard() {
                         <div key={folder.path} className="flex flex-col group p-6 bg-[var(--color-surface)] border border-[var(--color-border)] hover:border-gold transition-colors rounded-sm relative overflow-hidden">
                             <Link href={`/admin/portfolio/${folder.name}`} className="flex-1 block cursor-pointer">
                                 <h3 className="text-lg font-serif text-white group-hover:text-gold transition-colors capitalize">{folder.name.replace(/-/g, ' ')}</h3>
-                                <p className="text-xs text-[var(--color-muted)] mt-2 font-mono">{folder.path}</p>
+                                <p className="text-xs text-[var(--color-muted)] mt-2 font-mono break-all line-clamp-2">{folder.path}</p>
                             </Link>
                             <FolderActions folderPath={folder.path} folderName={folder.name} isCategory={true} />
                         </div>

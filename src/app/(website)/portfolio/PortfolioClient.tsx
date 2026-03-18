@@ -8,11 +8,11 @@ import { X, ChevronLeft, ChevronRight, ArrowLeft } from "lucide-react";
 // ─── Data ────────────────────────────────────────────────────────────────────
 
 export type Subject = {
-    id: string; // use Cloudinary path as ID
+    id: string; // use GitHub path as ID
     name: string;
     location: string;
-    coverImage: string; // Cloudinary public_id
-    images: string[];   // Array of Cloudinary public_ids
+    coverImage: string; // GitHub public_id
+    images: string[];   // Array of GitHub public_ids
 };
 
 export type CategoryData = {
