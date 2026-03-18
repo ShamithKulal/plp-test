@@ -66,7 +66,7 @@ export default function FolderActions({ folderPath, folderName, isCategory = fal
     if (isRenaming) {
         return (
             <div className="w-full mt-4 border-t border-[var(--color-border)] pt-4">
-                <form onSubmit={handleRenameSubmit} className="flex gap-2">
+                <form onSubmit={handleRenameSubmit} className="flex flex-wrap gap-2">
                     <input 
                         type="text" 
                         value={renameInput}
