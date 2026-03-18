@@ -1,6 +1,23 @@
 import { Metadata } from "next";
 import Image from "next/image";
 import InquiryForm from "@/components/forms/InquiryForm";
+import { getFolders, getImagesInFolder } from "@/app/admin/actions";
+
+async function getHeroImage(category: string, fallback: string) {
+    try {
+        const { folders } = await getFolders(`portfolio/${category}`);
+        if (folders && folders.length > 0) {
+            const clientName = folders[0].name;
+            const { images } = await getImagesInFolder(`portfolio/${category}/${clientName}`);
+            if (images && images.length > 0) {
+                return images[0].public_id;
+            }
+        }
+    } catch (e) {
+        console.error(e);
+    }
+    return fallback;
+}
 
 export const metadata: Metadata = {
     title: "Haldi & Mehendi Photography in Udupi & Mangalore | Paperlight Productions",
@@ -8,11 +25,15 @@ export const metadata: Metadata = {
     alternates: { canonical: "https://paperlightproductions.com/haldi-mehendi" },
 };
 
-export default function HaldiMehendiPage() {
+export const revalidate = 60;
+
+export default async function HaldiMehendiPage() {
+    const heroImage = await getHeroImage('haldi-mehandi', '/haldi-mehandi/poojitha-haldi/IMG_6441_3_11zon.jpg');
+
     return (
         <>
             <section className="relative pt-32 pb-20 min-h-[60vh] flex items-end overflow-hidden">
-                <Image src="/haldi-mehandi/poojitha-haldi/IMG_6441_3_11zon.jpg" alt="Haldi mehendi ceremony photography" fill priority className="object-cover object-top" sizes="100vw" />
+                <Image src={heroImage} alt="Haldi mehendi ceremony photography" fill priority className="object-cover object-top" sizes="100vw" />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-black/10" />
                 <div className="relative z-10 max-w-4xl mx-auto px-6 pb-12">
                     <p className="text-[11px] tracking-[0.4em] uppercase text-gold mb-4">Pre-Wedding Traditions</p>

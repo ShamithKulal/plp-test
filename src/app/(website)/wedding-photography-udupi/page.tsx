@@ -4,6 +4,23 @@ import Link from "next/link";
 import InquiryForm from "@/components/forms/InquiryForm";
 import JsonLd from "@/components/seo/JsonLd";
 import Testimonials from "@/components/home/Testimonials";
+import { getFolders, getImagesInFolder } from "@/app/admin/actions";
+
+async function getHeroImage(category: string, fallback: string) {
+    try {
+        const { folders } = await getFolders(`portfolio/${category}`);
+        if (folders && folders.length > 0) {
+            const clientName = folders[0].name;
+            const { images } = await getImagesInFolder(`portfolio/${category}/${clientName}`);
+            if (images && images.length > 0) {
+                return images[0].public_id;
+            }
+        }
+    } catch (e) {
+        console.error(e);
+    }
+    return fallback;
+}
 
 export const metadata: Metadata = {
     title: "Wedding Photographer in Udupi | Paperlight Productions",
@@ -41,7 +58,11 @@ const faqSchema = {
 
 const venues = ["Manipal County Club", "SVR Convention Hall", "Kaup Beach", "Malpe Beach", "Sri Durga Hall, Udupi", "Durgaparameshwari Temple Grounds"];
 
-export default function UdupiWeddingPage() {
+export const revalidate = 60;
+
+export default async function UdupiWeddingPage() {
+    const heroImage = await getHeroImage('weddings', '/hero-wedding.jpg');
+
     return (
         <>
             <JsonLd data={schema} />
@@ -49,7 +70,7 @@ export default function UdupiWeddingPage() {
 
             {/* Hero */}
             <section className="relative pt-32 pb-20 min-h-[70vh] flex items-end overflow-hidden">
-                <Image src="/hero-wedding.jpg" alt="Wedding photographer in Udupi" fill priority className="object-cover" sizes="100vw" />
+                <Image src={heroImage} alt="Wedding photographer in Udupi" fill priority className="object-cover" sizes="100vw" />
                 <div className="absolute inset-0 bg-gradient-to-t from-black via-black/60 to-black/20" />
                 <div className="relative z-10 max-w-4xl mx-auto px-6 pb-12">
                     <p className="text-[11px] tracking-[0.4em] uppercase text-gold mb-4">Udupi, Karnataka</p>
