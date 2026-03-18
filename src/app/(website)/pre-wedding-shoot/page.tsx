@@ -1,18 +1,13 @@
 import Image from "next/image";
 import InquiryForm from "@/components/forms/InquiryForm";
-import { getFolders, getImagesInFolder } from "@/app/admin/actions";
+import { getImagesInFolder } from "@/app/admin/actions";
 import LocationsClient from "./LocationsClient";
 
-async function getHeroImage(category: string, fallback: string) {
+async function getHeroImage(slug: string, fallback: string) {
     try {
-        const { folders } = await getFolders(`portfolio/${category}`);
-        if (folders && folders.length > 0) {
-            // Sort to ensure consistent ordering, or just take first
-            const clientName = folders[0].name;
-            const { images } = await getImagesInFolder(`portfolio/${category}/${clientName}`);
-            if (images && images.length > 0) {
-                return images[0].public_id; // jsDelivr CDN link
-            }
+        const { images } = await getImagesInFolder(`covers/${slug}`);
+        if (images && images.length > 0) {
+            return images[0].public_id;
         }
     } catch (e) {
         console.error(e);
