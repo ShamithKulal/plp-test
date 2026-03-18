@@ -1,34 +1,24 @@
-"use client";
+import { Loader2 } from "lucide-react";
 
-import { motion } from "framer-motion";
-
-export default function Loading() {
+export default function WebsiteLoadingScreen() {
     return (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-[#0D1B3E]">
-            <div className="flex flex-col items-center gap-6">
-                <div className="relative w-16 h-16">
-                    <motion.div
-                        className="absolute inset-0 rounded-full border-2 border-[var(--color-gold)] border-t-transparent opacity-80"
-                        animate={{ rotate: 360 }}
-                        transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-                    />
-                    <motion.div
-                        className="absolute inset-2 rounded-full border border-[var(--color-gold)] border-b-transparent opacity-40"
-                        animate={{ rotate: -360 }}
-                        transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }}
-                    />
-                    <div className="absolute inset-0 flex items-center justify-center">
-                        <div className="w-2 h-2 rounded-full bg-[var(--color-gold)] animate-pulse" />
-                    </div>
+        <div className="fixed inset-0 z-[9999] bg-[#0A0A0A] flex flex-col items-center justify-center animate-in fade-in duration-300">
+            <div className="relative flex flex-col items-center">
+                
+                {/* Spinning Dual Ring */}
+                <div className="relative w-20 h-20">
+                    <div className="absolute inset-0 border-[3px] border-[var(--color-border)] rounded-full"></div>
+                    <div className="absolute inset-0 border-[3px] border-transparent border-t-gold border-r-gold rounded-full animate-spin [animation-duration:1.5s]"></div>
+                    <div className="absolute inset-2 border-[2px] border-transparent border-b-white/50 border-l-white/50 rounded-full animate-spin [animation-duration:2s] [animation-direction:reverse]"></div>
                 </div>
-                <motion.div 
-                    initial={{ opacity: 0, y: 5 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.2 }}
-                    className="text-[var(--color-gold)] text-[10px] uppercase tracking-[0.3em] font-medium"
-                >
-                    Loading
-                </motion.div>
+
+                {/* Pulsing Branding */}
+                <div className="mt-8 flex flex-col items-center">
+                    <h2 className="font-serif tracking-widest text-lg text-white/90">PAPERLIGHT</h2>
+                    <p className="text-[9px] tracking-[0.4em] uppercase text-gold animate-pulse mt-2">
+                        Loading Experience
+                    </p>
+                </div>
             </div>
         </div>
     );
