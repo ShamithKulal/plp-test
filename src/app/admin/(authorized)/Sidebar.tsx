@@ -23,6 +23,7 @@ export default function Sidebar() {
     const menuItems = [
         { name: "Dashboard", href: "/admin", exact: true },
         { name: "Portfolio", href: "/admin/portfolio", exact: false },
+        { name: "Page Covers", href: "/admin/covers", exact: false },
     ];
 
     const content = (

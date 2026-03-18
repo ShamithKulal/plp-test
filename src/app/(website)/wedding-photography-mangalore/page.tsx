@@ -4,6 +4,19 @@ import Link from "next/link";
 import InquiryForm from "@/components/forms/InquiryForm";
 import JsonLd from "@/components/seo/JsonLd";
 import Testimonials from "@/components/home/Testimonials";
+import { getImagesInFolder } from "@/app/admin/actions";
+
+async function getHeroImage(slug: string, fallback: string) {
+    try {
+        const { images } = await getImagesInFolder(`covers/${slug}`);
+        if (images && images.length > 0) {
+            return images[0].public_id;
+        }
+    } catch (e) {
+        console.error(e);
+    }
+    return fallback;
+}
 
 export const metadata: Metadata = {
     title: "Wedding Photographer in Mangalore | Paperlight Productions",
@@ -35,14 +48,18 @@ const faqSchema = {
 
 const venues = ["Blue Waters Resort", "Goldfinch Hotel", "Pilikula Grounds", "Pabbas Mangalore", "Hotel Moti Mahal", "Lalbagh Grounds"];
 
-export default function MangaloreWeddingPage() {
+export const revalidate = 60;
+
+export default async function MangaloreWeddingPage() {
+    const heroImage = await getHeroImage('weddings', '/prewedding-hero.jpg');
+
     return (
         <>
             <JsonLd data={schema} />
             <JsonLd data={faqSchema} />
 
             <section className="relative pt-32 pb-20 min-h-[70vh] flex items-end overflow-hidden">
-                <Image src="/prewedding-hero.jpg" alt="Wedding photographer in Mangalore" fill priority className="object-cover" sizes="100vw" />
+                <Image src={heroImage} alt="Wedding photographer in Mangalore" fill priority className="object-cover" sizes="100vw" />
                 <div className="absolute inset-0 bg-gradient-to-t from-black via-black/60 to-black/20" />
                 <div className="relative z-10 max-w-4xl mx-auto px-6 pb-12">
                     <p className="text-[11px] tracking-[0.4em] uppercase text-gold mb-4">Mangalore, Karnataka</p>
