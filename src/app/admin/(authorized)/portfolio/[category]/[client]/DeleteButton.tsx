@@ -36,7 +36,7 @@ export default function DeleteButton({ publicId, deleteServerAction }: { publicI
         <button 
             onClick={handleDelete}
             disabled={isDeleting}
-            className={`absolute top-2 right-2 text-white p-2 text-xs rounded-sm opacity-0 group-hover:opacity-100 transition-all disabled:opacity-50 ${awaitingConfirm ? 'bg-red-700 px-3 font-bold z-10' : 'bg-red-500/90 hover:bg-red-600 z-10'}`}
+            className={`absolute top-2 right-2 text-white p-2 text-xs rounded-sm opacity-100 md:opacity-0 group-hover:opacity-100 transition-all disabled:opacity-50 ${awaitingConfirm ? 'bg-red-700 px-3 font-bold z-10' : 'bg-red-500/90 hover:bg-red-600 z-10'}`}
             title="Delete photo"
         >
             {isDeleting ? "..." : awaitingConfirm ? "Sure?" : (
