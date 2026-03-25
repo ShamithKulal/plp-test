@@ -63,8 +63,9 @@ export async function POST(req: NextRequest) {
         }
 
         // ── 2. Send to Google Sheets via Apps Script ────────────────────────────
-        const sheetsUrl = process.env.GOOGLE_SHEETS_WEBHOOK_URL;
+        let sheetsUrl = process.env.GOOGLE_SHEETS_WEBHOOK_URL;
         if (sheetsUrl) {
+            sheetsUrl = sheetsUrl.replace(/^['"]+|['"]+$/g, '').trim();
             await fetch(sheetsUrl, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
