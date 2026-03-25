@@ -24,6 +24,7 @@ export default function Sidebar() {
         { name: "Dashboard", href: "/admin", exact: true },
         { name: "Portfolio", href: "/admin/portfolio", exact: false },
         { name: "Page Covers", href: "/admin/covers", exact: false },
+        { name: "Our Bookings", href: "/admin/bookings", exact: false },
     ];
 
     const content = (

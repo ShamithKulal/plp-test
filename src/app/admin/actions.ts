@@ -327,3 +327,109 @@ export async function reorderImagesInFolder(folderPath: string, sortedFilenames:
         return { success: false, error: error.message };
     }
 }
+
+// ─── Analytics ───────────────────────────────────────────────────────────────
+
+export async function fetchTotalImageCount() {
+    if (!process.env.GITHUB_TOKEN) return 0;
+    try {
+        const commitSha = await getBranchSha();
+        const treeData = await getCommitTree(commitSha);
+        
+        let count = 0;
+        for (const item of treeData) {
+            if (item.type === "blob") {
+                const ext = item.path.split('.').pop()?.toLowerCase();
+                if (['jpg', 'jpeg', 'png', 'webp', 'gif'].includes(ext || '')) {
+                    count++;
+                }
+            }
+        }
+        return count;
+    } catch {
+        return 0;
+    }
+}
+
+export async function fetchInquiryStats() {
+    if (!process.env.GOOGLE_SHEETS_WEBHOOK_URL) return { success: false, dates: [] };
+    try {
+        const res = await fetch(process.env.GOOGLE_SHEETS_WEBHOOK_URL, {
+            next: { revalidate: 60 } // Cache these dates for 60 seconds
+        });
+        
+        if (!res.ok) throw new Error("Failed to fetch");
+        const data = await res.json();
+        
+        return { success: data.success, dates: data.dates || [] };
+    } catch (error: any) {
+        console.error("Error fetching sheet dates:", error.message);
+        return { success: false, dates: [] };
+    }
+}
+
+// ─── JSON Datastore (Bookings) ───────────────────────────────────────────────
+
+export async function fetchBookings() {
+    if (!process.env.GITHUB_TOKEN) return { success: false, bookings: [] };
+    try {
+        const url = `https://api.github.com/repos/${GITHUB_REPO}/contents/data/bookings.json?ref=${GITHUB_BRANCH}`;
+        const res = await fetch(url, {
+            headers: { 'Authorization': `token ${process.env.GITHUB_TOKEN}`, 'Accept': 'application/vnd.github.v3+json', 'User-Agent': 'Paperlight-NextJS-App' },
+            next: { revalidate: 0 } // Always fresh
+        });
+        
+        if (res.status === 404) return { success: true, bookings: [] }; // Initial state
+        if (!res.ok) throw new Error("Failed to fetch bookings");
+        
+        const data = await res.json();
+        const jsonString = Buffer.from(data.content, 'base64').toString('utf8');
+        const bookings = JSON.parse(jsonString);
+        return { success: true, bookings: Array.isArray(bookings) ? bookings : [] };
+    } catch (error) {
+        console.error("Error fetching bookings from GitHub:", error);
+        return { success: false, bookings: [] };
+    }
+}
+
+export async function saveBookings(bookings: any[]) {
+    if (!process.env.GITHUB_TOKEN) return { success: false, error: "GitHub Token required" };
+    try {
+        const url = `https://api.github.com/repos/${GITHUB_REPO}/contents/data/bookings.json`;
+        let sha = undefined;
+        
+        const getRes = await fetch(`${url}?ref=${GITHUB_BRANCH}`, {
+            headers: { 'Authorization': `token ${process.env.GITHUB_TOKEN}`, 'Accept': 'application/vnd.github.v3+json', 'User-Agent': 'Paperlight-NextJS-App' },
+            next: { revalidate: 0 }
+        });
+        
+        if (getRes.ok) {
+            const currentData = await getRes.json();
+            sha = currentData.sha;
+        }
+
+        const jsonString = JSON.stringify(bookings, null, 2);
+        const base64Content = Buffer.from(jsonString).toString('base64');
+        
+        const res = await fetch(url, {
+            method: "PUT",
+            headers: { 'Authorization': `token ${process.env.GITHUB_TOKEN}`, 'Accept': 'application/vnd.github.v3+json', 'Content-Type': 'application/json', 'User-Agent': 'Paperlight-NextJS-App' },
+            body: JSON.stringify({
+                message: "Update bookings calendar",
+                content: base64Content,
+                sha: sha,
+                branch: GITHUB_BRANCH
+            })
+        });
+
+        if (!res.ok) {
+            const err = await res.json();
+            throw new Error(err.message || "Failed to save bookings");
+        }
+        
+        revalidatePath('/admin/bookings');
+        return { success: true };
+    } catch (error: any) {
+        return { success: false, error: error.message };
+    }
+}
