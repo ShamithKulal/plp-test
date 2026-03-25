@@ -366,8 +366,15 @@ export async function fetchInquiryStats() {
             throw new Error(`HTTP ${res.status}: ${txt.slice(0, 30)}...`);
         }
         
-        const data = await res.json();
-        return { success: data.success, dates: data.dates || [] };
+        const rawText = await res.text();
+        try {
+            const data = JSON.parse(rawText);
+            return { success: data.success, dates: data.dates || [] };
+        } catch (parseError) {
+            // If Google returned HTML, surface what kind of HTML page it is
+            const snippet = rawText.replace(/\n/g, '').slice(0, 100);
+            throw new Error(`HTML Received: ${snippet}`);
+        }
     } catch (error: any) {
         return { success: false, dates: [], error: error.message || "Failed to parse Google JSON" };
     }
