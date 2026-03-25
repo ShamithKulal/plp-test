@@ -139,7 +139,7 @@ export default function AdminCalendar({ initialBookings, saveAction }: { initial
                             <div 
                                 key={b.id} 
                                 onClick={(e) => { e.stopPropagation(); openModal(dateStr, b); }}
-                                className="bg-gold/10 border border-gold/30 rounded-sm px-2 py-1 text-[10px] sm:text-xs truncate hover:bg-gold/20 transition-colors"
+                                className="bg-gold/10 border border-gold/30 rounded-sm px-2 py-1 text-[10px] sm:text-xs truncate hover:bg-gold/40 hover:border-gold cursor-pointer transition-all duration-200"
                             >
                                 <span className="font-semibold text-gold block truncate">{b.title}</span>
                                 <span className="text-white/70 block truncate">{b.clientName}</span>
