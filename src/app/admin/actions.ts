@@ -355,7 +355,8 @@ export async function fetchInquiryStats() {
     if (!process.env.GOOGLE_SHEETS_WEBHOOK_URL) return { success: false, dates: [] };
     try {
         const res = await fetch(process.env.GOOGLE_SHEETS_WEBHOOK_URL, {
-            next: { revalidate: 60 } // Cache these dates for 60 seconds
+            redirect: "follow",
+            next: { revalidate: 0 } // Always fetch fresh to bypass Vercel static cache
         });
         
         if (!res.ok) throw new Error("Failed to fetch");
