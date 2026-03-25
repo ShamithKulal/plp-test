@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { getImagesInFolder, deleteImage } from "../../../actions";
+import { getImagesInFolder, deleteImage, reorderImagesInFolder } from "../../../actions";
 import UploadWidget from "../../portfolio/[category]/[client]/UploadWidget";
 import AdminImageGrid from "../../portfolio/[category]/[client]/AdminImageGrid";
 
@@ -52,7 +52,14 @@ export default async function CoverDetailsPage({ params }: { params: Promise<{ s
                     <div className="mb-4 text-sm text-gold">
                         Note: The live website will automatically display the first image in this grid as the full-screen background.
                     </div>
-                    <AdminImageGrid images={images} deleteServerAction={deleteImage} />
+                    <AdminImageGrid 
+                        images={images} 
+                        deleteServerAction={deleteImage} 
+                        reorderServerAction={async (sortedFilenames) => {
+                            "use server";
+                            return await reorderImagesInFolder(folderPath, sortedFilenames);
+                        }}
+                    />
                 </>
             )}
         </div>

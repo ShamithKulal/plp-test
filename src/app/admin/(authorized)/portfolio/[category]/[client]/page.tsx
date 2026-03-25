@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { getImagesInFolder, deleteImage } from "../../../../actions";
+import { getImagesInFolder, deleteImage, reorderImagesInFolder } from "../../../../actions";
 import UploadWidget from "./UploadWidget";
 import AdminImageGrid from "./AdminImageGrid";
 
@@ -44,7 +44,14 @@ export default async function ClientPortfolioPage({ params }: { params: Promise<
                     <p className="text-sm text-[var(--color-muted)] mt-3 max-w-sm mx-auto">Click &quot;Upload Photos&quot; above to add images directly to your GitHub repository.</p>
                 </div>
             ) : (
-                <AdminImageGrid images={images} deleteServerAction={deleteImage} />
+                <AdminImageGrid 
+                    images={images} 
+                    deleteServerAction={deleteImage} 
+                    reorderServerAction={async (sortedFilenames) => {
+                        "use server";
+                        return await reorderImagesInFolder(folderPath, sortedFilenames);
+                    }}
+                />
             )}
         </div>
     );

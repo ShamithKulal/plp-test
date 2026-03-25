@@ -266,3 +266,64 @@ export async function uploadImage(folderPath: string, fileBase64: string, filena
         return { success: false, error: error.message };
     }
 }
+
+export async function reorderImagesInFolder(folderPath: string, sortedFilenames: string[]) {
+    if (!process.env.GITHUB_TOKEN) return { success: false, error: "GitHub Token required for this action." };
+    try {
+        const commitSha = await getBranchSha();
+        
+        const commitRes = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/git/commits/${commitSha}`, {
+            headers: { 'Authorization': `token ${process.env.GITHUB_TOKEN}`, 'User-Agent': 'Paperlight-NextJS-App' }, next: { revalidate: 0 }
+        });
+        if (!commitRes.ok) throw new Error(`Failed to fetch commit: ${await commitRes.text()}`);
+        
+        const commitData = await commitRes.json();
+        const baseTreeSha = commitData.tree.sha;
+
+        const treeData = await getCommitTree(commitSha);
+        const prefix = folderPath + "/";
+        
+        const filesToMove = treeData.filter((item: any) => item.type === "blob" && item.path.startsWith(prefix));
+        if (filesToMove.length === 0) return { success: false, error: "Folder is empty or not found." };
+
+        const combinedTreeItems = filesToMove.flatMap((item: any) => {
+            const oldName = item.path.substring(prefix.length);
+            
+            // sortedFilenames comes directly from the client which stripped the URL down to the filename
+            const index = sortedFilenames.indexOf(oldName);
+            
+            if (index === -1) {
+                // If a file exists in GitHub but wasn't in the frontend array (rare, concurrent upload?), just leave it alone
+                return []; 
+            }
+            
+            // Remove any existing numerical prefix (e.g. 000_photo.jpg -> photo.jpg)
+            const cleanName = oldName.replace(/^\d+_/, '');
+            
+            // Prepend the new numerical index to force alphabetical sorting later
+            const newName = `${String(index).padStart(3, '0')}_${cleanName}`;
+            const newPath = prefix + newName;
+            
+            if (newPath === item.path) {
+                // No change needed for this specific file, it is already alphabetically correct
+                return [];
+            }
+
+            return [
+                { path: newPath, mode: item.mode, type: item.type, sha: item.sha }, // Create the file at the new path
+                { path: item.path, mode: item.mode, type: item.type, sha: null }    // Delete the file at the old path
+            ];
+        });
+
+        if (combinedTreeItems.length === 0) return { success: true }; // Nothing to change!
+
+        const newTreeSha = await createTree(baseTreeSha, combinedTreeItems);
+        const newCommitSha = await createCommit(`Reorder images in ${folderPath}`, newTreeSha, commitSha);
+        await updateBranchRef(newCommitSha);
+
+        revalidatePath('/', 'layout');
+        return { success: true };
+    } catch (error: any) {
+        return { success: false, error: error.message };
+    }
+}
