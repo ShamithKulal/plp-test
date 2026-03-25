@@ -327,3 +327,43 @@ export async function reorderImagesInFolder(folderPath: string, sortedFilenames:
         return { success: false, error: error.message };
     }
 }
+
+// ─── Analytics ───────────────────────────────────────────────────────────────
+
+export async function fetchTotalImageCount() {
+    if (!process.env.GITHUB_TOKEN) return 0;
+    try {
+        const commitSha = await getBranchSha();
+        const treeData = await getCommitTree(commitSha);
+        
+        let count = 0;
+        for (const item of treeData) {
+            if (item.type === "blob") {
+                const ext = item.path.split('.').pop()?.toLowerCase();
+                if (['jpg', 'jpeg', 'png', 'webp', 'gif'].includes(ext || '')) {
+                    count++;
+                }
+            }
+        }
+        return count;
+    } catch {
+        return 0;
+    }
+}
+
+export async function fetchInquiryStats() {
+    if (!process.env.GOOGLE_SHEETS_WEBHOOK_URL) return { success: false, dates: [] };
+    try {
+        const res = await fetch(process.env.GOOGLE_SHEETS_WEBHOOK_URL, {
+            next: { revalidate: 60 } // Cache these dates for 60 seconds
+        });
+        
+        if (!res.ok) throw new Error("Failed to fetch");
+        const data = await res.json();
+        
+        return { success: data.success, dates: data.dates || [] };
+    } catch (error: any) {
+        console.error("Error fetching sheet dates:", error.message);
+        return { success: false, dates: [] };
+    }
+}
