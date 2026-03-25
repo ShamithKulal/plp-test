@@ -139,9 +139,9 @@ export default function AdminCalendar({ initialBookings, saveAction }: { initial
                             <div 
                                 key={b.id} 
                                 onClick={(e) => { e.stopPropagation(); openModal(dateStr, b); }}
-                                className="group/pill relative z-20 bg-gold/10 border border-gold/40 rounded-sm px-2 py-1 text-[10px] sm:text-xs hover:bg-gold cursor-pointer transition-all duration-200"
+                                className="group/pill relative z-20 bg-[#F5A623]/10 border border-[#F5A623]/40 rounded-sm px-2 py-1 text-[10px] sm:text-xs hover:bg-[#F5A623] cursor-pointer transition-all duration-200"
                             >
-                                <span className="font-semibold text-gold group-hover/pill:text-black block truncate">{b.title}</span>
+                                <span className="font-semibold text-[#F5A623] group-hover/pill:text-black block truncate">{b.title}</span>
                                 <span className="text-[var(--color-muted)] group-hover/pill:text-black/90 block truncate">{b.clientName}</span>
                             </div>
                         ))}
