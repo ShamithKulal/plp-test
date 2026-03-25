@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { getFolders, fetchTotalImageCount, fetchInquiryStats } from "../actions";
+import { getFolders, fetchTotalImageCount, fetchInquiryStats, fetchBookings } from "../actions";
 import InquiryChart from "@/components/admin/InquiryChart";
 
 export const revalidate = 0;
@@ -9,11 +9,13 @@ export default async function AdminDashboardPage() {
     const [
         { folders: categories },
         totalImagesCount,
-        { success: datesSuccess, dates }
+        { success: datesSuccess, dates },
+        { success: bookingsSuccess, bookings }
     ] = await Promise.all([
         getFolders("portfolio"),
         fetchTotalImageCount(),
-        fetchInquiryStats()
+        fetchInquiryStats(),
+        fetchBookings()
     ]);
     
     // Total Clients calculation 
@@ -49,12 +51,21 @@ export default async function AdminDashboardPage() {
         inquiries: monthCounts[month]
     }));
 
+    const currentMonthStr = new Date().toLocaleDateString('en-CA').slice(0, 7);
+    const shootsThisMonth = bookings?.filter((b: any) => b.date.startsWith(currentMonthStr))?.length || 0;
+
+    const todayStr = new Date().toLocaleDateString('en-CA');
+    const upcomingShoots = (bookings || [])
+        .filter((b: any) => b.date >= todayStr)
+        .sort((a: any, b: any) => a.date.localeCompare(b.date))
+        .slice(0, 4);
+
     return (
         <div>
             <h2 className="text-3xl font-serif text-white mb-2">Welcome Back</h2>
             <p className="text-[var(--color-muted)] mb-8">Here is an overview of your Paperlight Productions portfolio.</p>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 mb-8">
                 <div className="bg-[var(--color-surface)] border border-[var(--color-border)] p-6 rounded-sm flex flex-col justify-between">
                     <div>
                         <p className="text-[11px] text-[var(--color-muted)] font-medium tracking-[0.15em] mb-1 uppercase">Categories</p>
@@ -75,6 +86,12 @@ export default async function AdminDashboardPage() {
                 </div>
                 <div className="bg-[var(--color-surface)] border border-[var(--color-border)] p-6 rounded-sm flex flex-col justify-between">
                     <div>
+                        <p className="text-[11px] text-[var(--color-muted)] font-medium tracking-[0.15em] mb-1 uppercase">Shoots This Month</p>
+                        <p className="text-4xl text-white font-serif">{shootsThisMonth}</p>
+                    </div>
+                </div>
+                <div className="bg-[var(--color-surface)] border border-[var(--color-border)] p-6 rounded-sm flex flex-col justify-between">
+                    <div>
                         <p className="text-[11px] text-gold font-medium tracking-[0.15em] mb-1 uppercase">Total Inquiries</p>
                         <p className="text-4xl text-gold font-serif">{dates?.length || 0}</p>
                     </div>
@@ -90,13 +107,31 @@ export default async function AdminDashboardPage() {
                     <InquiryChart data={chartData} />
                 </div>
                 
-                <div className="bg-[var(--color-surface)] border border-[var(--color-border)] p-8 rounded-sm flex flex-col justify-center text-center">
-                    <div className="w-16 h-16 mx-auto bg-gold/10 text-gold rounded-full flex items-center justify-center mb-6 text-2xl">📸</div>
-                    <h3 className="text-xl font-serif text-white mb-3">Manage Portfolio</h3>
-                    <p className="text-sm text-[var(--color-muted)] mb-8">Maintain categories, setup client branches, and upload high-res files directly to your Git repository.</p>
-                    <Link href="/admin/portfolio" className="inline-block bg-white text-black px-6 py-3 text-[11px] tracking-widest font-semibold uppercase hover:bg-white/90 transition-colors rounded-sm">
-                        Open Manager
-                    </Link>
+                <div className="bg-[var(--color-surface)] border border-[var(--color-border)] p-6 rounded-sm flex flex-col">
+                    <h3 className="text-lg font-serif text-white mb-6 flex items-center justify-between">
+                        Upcoming Shoots
+                        <Link href="/admin/bookings" className="text-[10px] uppercase tracking-widest text-[var(--color-muted)] hover:text-gold transition-colors">View Calendar ➔</Link>
+                    </h3>
+                    
+                    {upcomingShoots.length === 0 ? (
+                        <div className="flex-1 flex flex-col items-center justify-center text-center py-8">
+                            <div className="w-12 h-12 bg-[#111] border border-[var(--color-border)] rounded-full flex items-center justify-center mb-3">
+                                📅
+                            </div>
+                            <p className="text-sm text-[var(--color-muted)]">No upcoming shoots scheduled.</p>
+                            <Link href="/admin/bookings" className="mt-4 px-4 py-2 border border-[var(--color-border)] rounded-sm text-[10px] tracking-widest uppercase hover:text-white transition-colors">Add Shoot</Link>
+                        </div>
+                    ) : (
+                        <div className="space-y-4">
+                            {upcomingShoots.map((shoot: any) => (
+                                <div key={shoot.id} className="border-l-2 border-gold pl-4 py-1">
+                                    <p className="text-sm text-white font-semibold">{shoot.title}</p>
+                                    <p className="text-xs text-[var(--color-muted)] mt-1">{new Date(shoot.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })} <span className="text-white/30 px-1">|</span> {shoot.time || "Time TBD"}</p>
+                                    <p className="text-xs text-[var(--color-muted)] mt-1 truncate max-w-[250px]">{shoot.clientName} {shoot.location && `· ${shoot.location}`}</p>
+                                </div>
+                            ))}
+                        </div>
+                    )}
                 </div>
             </div>
         </div>
