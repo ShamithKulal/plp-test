@@ -352,20 +352,24 @@ export async function fetchTotalImageCount() {
 }
 
 export async function fetchInquiryStats() {
-    if (!process.env.GOOGLE_SHEETS_WEBHOOK_URL) return { success: false, dates: [] };
+    if (!process.env.GOOGLE_SHEETS_WEBHOOK_URL) {
+        return { success: false, dates: [], error: "Missing GOOGLE_SHEETS_WEBHOOK_URL on Vercel" };
+    }
     try {
         const res = await fetch(process.env.GOOGLE_SHEETS_WEBHOOK_URL, {
             redirect: "follow",
-            next: { revalidate: 0 } // Always fetch fresh to bypass Vercel static cache
+            next: { revalidate: 0 }
         });
         
-        if (!res.ok) throw new Error("Failed to fetch");
-        const data = await res.json();
+        if (!res.ok) {
+            const txt = await res.text();
+            throw new Error(`HTTP ${res.status}: ${txt.slice(0, 30)}...`);
+        }
         
+        const data = await res.json();
         return { success: data.success, dates: data.dates || [] };
     } catch (error: any) {
-        console.error("Error fetching sheet dates:", error.message);
-        return { success: false, dates: [] };
+        return { success: false, dates: [], error: error.message || "Failed to parse Google JSON" };
     }
 }
 
