@@ -143,26 +143,26 @@ export default function InquiryForm({ compact = false }: InquiryFormProps) {
                         <div className={`grid gap-4 ${compact ? "grid-cols-1" : "grid-cols-1 sm:grid-cols-2"}`}>
                             <div>
                                 <label className={labelClass}>Your Name *</label>
-                                <input {...register("name")} placeholder="(Enter your name)" className={inputClass} />
+                                <input {...register("name")} placeholder="Enter your name" className={inputClass} />
                                 {errors.name && <p className={errorClass}>{errors.name.message}</p>}
                             </div>
                             <div>
                                 <label className={labelClass}>Phone Number *</label>
-                                <input {...register("phone")} placeholder="(Enter your phone number)" type="tel" className={inputClass} />
+                                <input {...register("phone")} placeholder="Enter your phone number" type="tel" className={inputClass} />
                                 {errors.phone && <p className={errorClass}>{errors.phone.message}</p>}
                             </div>
                         </div>
 
                         <div>
                             <label className={labelClass}>Email (optional)</label>
-                            <input {...register("email")} placeholder="(Enter your email)" type="email" className={inputClass} />
+                            <input {...register("email")} placeholder="Enter your email" type="email" className={inputClass} />
                             {errors.email && <p className={errorClass}>{errors.email.message}</p>}
                         </div>
 
                         <div className={`grid gap-4 ${compact ? "grid-cols-1" : "grid-cols-1 sm:grid-cols-2"}`}>
                             <div>
                                 <label className={labelClass}>Event Type *</label>
-                                <input {...register("eventType")} placeholder="(e.g. Wedding, Corporate)" className={inputClass} />
+                                <input {...register("eventType")} placeholder="e.g. Wedding, Corporate" className={inputClass} />
                                 {errors.eventType && <p className={errorClass}>{errors.eventType.message}</p>}
                             </div>
                             <div>
@@ -180,7 +180,7 @@ export default function InquiryForm({ compact = false }: InquiryFormProps) {
 
                         <div>
                             <label className={labelClass}>Event Location *</label>
-                            <input {...register("location")} placeholder="(Enter event location)" className={inputClass} />
+                            <input {...register("location")} placeholder="Enter event location" className={inputClass} />
                             {errors.location && <p className={errorClass}>{errors.location.message}</p>}
                         </div>
 
