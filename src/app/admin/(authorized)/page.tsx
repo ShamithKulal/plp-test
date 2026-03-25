@@ -9,7 +9,7 @@ export default async function AdminDashboardPage() {
     const [
         { folders: categories },
         totalImagesCount,
-        { success: datesSuccess, dates, error: inquiryError },
+        { success: datesSuccess, dates },
         { success: bookingsSuccess, bookings }
     ] = await Promise.all([
         getFolders("portfolio"),
@@ -90,11 +90,10 @@ export default async function AdminDashboardPage() {
                         <p className="text-4xl text-white font-serif">{shootsThisMonth}</p>
                     </div>
                 </div>
-                <div className="bg-[var(--color-surface)] border border-[var(--color-border)] p-6 rounded-sm flex flex-col justify-between group relative overflow-hidden">
-                    <div className="relative z-10">
+                <div className="bg-[var(--color-surface)] border border-[var(--color-border)] p-6 rounded-sm flex flex-col justify-between">
+                    <div>
                         <p className="text-[11px] text-gold font-medium tracking-[0.15em] mb-1 uppercase">Total Inquiries</p>
                         <p className="text-4xl text-gold font-serif">{dates?.length || 0}</p>
-                        {inquiryError && <p className="text-[9px] text-red-400 mt-2 absolute -bottom-4 whitespace-nowrap">{inquiryError}</p>}
                     </div>
                 </div>
             </div>
