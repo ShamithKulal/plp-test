@@ -147,8 +147,8 @@ export default function AdminCalendar({ initialBookings, saveAction }: { initial
                         ))}
                     </div>
 
-                    <div className="absolute inset-0 bg-white/5 opacity-0 group-hover:opacity-100 flex items-center justify-center pointer-events-none transition-opacity">
-                        <Plus size={20} className="text-white/30" />
+                    <div className="absolute inset-0 bg-white/5 opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity flex items-center justify-center">
+                        {dayBookings.length === 0 && <Plus size={20} className="text-white/30" />}
                     </div>
                 </div>
             );
