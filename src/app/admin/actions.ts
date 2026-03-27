@@ -352,31 +352,30 @@ export async function fetchTotalImageCount() {
 }
 
 export async function fetchInquiryStats() {
-    if (!process.env.GOOGLE_SHEETS_WEBHOOK_URL) {
-        return { success: false, dates: [], error: "Missing GOOGLE_SHEETS_WEBHOOK_URL on Vercel" };
-    }
+    let rawUrl = process.env.GOOGLE_SHEETS_WEBHOOK_URL;
+    if (!rawUrl) return { success: false, dates: [] };
+    
+    // Defensive: strip accidental quotes if pasted wrongly into Vercel
+    const cleanUrl = rawUrl.replace(/^['"]+|['"]+$/g, '').trim();
+
     try {
-        const res = await fetch(process.env.GOOGLE_SHEETS_WEBHOOK_URL, {
-            redirect: "follow",
-            next: { revalidate: 0 }
+        const res = await fetch(cleanUrl, {
+            method: 'GET',
+            cache: 'no-store',
+            headers: {
+                'Accept': 'application/json',
+                'User-Agent': 'Mozilla/5.0'
+            },
+            redirect: "follow"
         });
         
-        if (!res.ok) {
-            const txt = await res.text();
-            throw new Error(`HTTP ${res.status}: ${txt.slice(0, 30)}...`);
-        }
+        if (!res.ok) throw new Error("Fetch failed");
         
-        const rawText = await res.text();
-        try {
-            const data = JSON.parse(rawText);
-            return { success: data.success, dates: data.dates || [] };
-        } catch (parseError) {
-            // If Google returned HTML, surface what kind of HTML page it is
-            const snippet = rawText.replace(/\n/g, '').slice(0, 100);
-            throw new Error(`HTML Received: ${snippet}`);
-        }
-    } catch (error: any) {
-        return { success: false, dates: [], error: error.message || "Failed to parse Google JSON" };
+        const data = await res.json();
+        return { success: true, dates: data.dates || [] };
+    } catch (error) {
+        console.error("Error fetching inquiry stats:", error);
+        return { success: false, dates: [] };
     }
 }
 

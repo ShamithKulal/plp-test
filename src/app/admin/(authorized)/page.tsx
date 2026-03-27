@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { getFolders, fetchTotalImageCount, fetchInquiryStats, fetchBookings } from "../actions";
 import InquiryChart from "@/components/admin/InquiryChart";
+import ShootsChart from "@/components/admin/ShootsChart";
 
 export const revalidate = 0;
 
@@ -9,7 +10,7 @@ export default async function AdminDashboardPage() {
     const [
         { folders: categories },
         totalImagesCount,
-        { success: datesSuccess, dates, error: inquiryError },
+        { success: datesSuccess, dates },
         { success: bookingsSuccess, bookings }
     ] = await Promise.all([
         getFolders("portfolio"),
@@ -51,6 +52,29 @@ export default async function AdminDashboardPage() {
         inquiries: monthCounts[month]
     }));
 
+    // Aggregate Shoots by Month
+    const shootMonthCounts: Record<string, number> = {
+        Jan: 0, Feb: 0, Mar: 0, Apr: 0, May: 0, Jun: 0,
+        Jul: 0, Aug: 0, Sep: 0, Oct: 0, Nov: 0, Dec: 0
+    };
+
+    if (bookingsSuccess && bookings) {
+        bookings.forEach((booking: any) => {
+            const date = new Date(booking.date);
+            if (!isNaN(date.getTime())) {
+                const monthName = date.toLocaleString('default', { month: 'short' });
+                if (shootMonthCounts[monthName] !== undefined) {
+                    shootMonthCounts[monthName]++;
+                }
+            }
+        });
+    }
+
+    const shootChartData = monthsOrder.map(month => ({
+        month,
+        shoots: shootMonthCounts[month]
+    }));
+
     const currentMonthStr = new Date().toLocaleDateString('en-CA').slice(0, 7);
     const shootsThisMonth = bookings?.filter((b: any) => b.date.startsWith(currentMonthStr))?.length || 0;
 
@@ -90,17 +114,16 @@ export default async function AdminDashboardPage() {
                         <p className="text-4xl text-white font-serif">{shootsThisMonth}</p>
                     </div>
                 </div>
-                <div className="bg-[var(--color-surface)] border border-[var(--color-border)] p-6 rounded-sm flex flex-col justify-between group relative overflow-hidden">
-                    <div className="relative z-10">
+                <div className="bg-[var(--color-surface)] border border-[var(--color-border)] p-6 rounded-sm flex flex-col justify-between">
+                    <div>
                         <p className="text-[11px] text-gold font-medium tracking-[0.15em] mb-1 uppercase">Total Inquiries</p>
                         <p className="text-4xl text-gold font-serif">{dates?.length || 0}</p>
-                        {inquiryError && <p className="text-[9px] text-red-400 mt-2 absolute -bottom-4 whitespace-nowrap">{inquiryError}</p>}
                     </div>
                 </div>
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-12">
-                <div className="lg:col-span-2 bg-[var(--color-surface)] border border-[var(--color-border)] p-6 rounded-sm">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-12">
+                <div className="bg-[var(--color-surface)] border border-[var(--color-border)] p-6 rounded-sm">
                     <h3 className="text-lg font-serif text-white mb-6 flex items-center gap-2">
                         <span className="w-2 h-2 rounded-full bg-gold"></span>
                         Inquiries Over Time
@@ -108,7 +131,17 @@ export default async function AdminDashboardPage() {
                     <InquiryChart data={chartData} />
                 </div>
                 
-                <div className="bg-[var(--color-surface)] border border-[var(--color-border)] p-6 rounded-sm flex flex-col">
+                <div className="bg-[var(--color-surface)] border border-[var(--color-border)] p-6 rounded-sm">
+                    <h3 className="text-lg font-serif text-white mb-6 flex items-center gap-2">
+                        <span className="w-2 h-2 rounded-full bg-gold"></span>
+                        Shoots Booking by Month
+                    </h3>
+                    <ShootsChart data={shootChartData} />
+                </div>
+            </div>
+
+            <div className="grid grid-cols-1 gap-6 mb-12">
+                <div className="bg-[var(--color-surface)] border border(--color-border)] p-6 rounded-sm flex flex-col">
                     <h3 className="text-lg font-serif text-white mb-6 flex items-center justify-between">
                         Upcoming Shoots
                         <Link href="/admin/bookings" className="text-[10px] uppercase tracking-widest text-[var(--color-muted)] hover:text-gold transition-colors">View Calendar ➔</Link>
