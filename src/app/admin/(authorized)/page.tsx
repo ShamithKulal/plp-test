@@ -53,28 +53,6 @@ export default async function AdminDashboardPage() {
     }));
 
     // Aggregate Shoots by Month
-    const shootMonthCounts: Record<string, number> = {
-        Jan: 0, Feb: 0, Mar: 0, Apr: 0, May: 0, Jun: 0,
-        Jul: 0, Aug: 0, Sep: 0, Oct: 0, Nov: 0, Dec: 0
-    };
-
-    if (bookingsSuccess && bookings) {
-        bookings.forEach((booking: any) => {
-            const date = new Date(booking.date);
-            if (!isNaN(date.getTime())) {
-                const monthName = date.toLocaleString('default', { month: 'short' });
-                if (shootMonthCounts[monthName] !== undefined) {
-                    shootMonthCounts[monthName]++;
-                }
-            }
-        });
-    }
-
-    const shootChartData = monthsOrder.map(month => ({
-        month,
-        shoots: shootMonthCounts[month]
-    }));
-
     const currentMonthStr = new Date().toLocaleDateString('en-CA').slice(0, 7);
     const shootsThisMonth = bookings?.filter((b: any) => b.date.startsWith(currentMonthStr))?.length || 0;
 
@@ -136,7 +114,7 @@ export default async function AdminDashboardPage() {
                         <span className="w-2 h-2 rounded-full bg-gold"></span>
                         Shoots Booking by Month
                     </h3>
-                    <ShootsChart data={shootChartData} />
+                    <ShootsChart bookings={bookingsSuccess && bookings ? bookings : []} />
                 </div>
             </div>
 

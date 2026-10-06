@@ -14,8 +14,8 @@ export type Booking = {
     notes?: string;
 };
 
-export default function AdminCalendar({ initialBookings, saveAction }: { initialBookings: Booking[], saveAction: (bookings: Booking[]) => Promise<{success: boolean, error?: string}> }) {
-    const [currentDate, setCurrentDate] = useState(new Date());
+export default function AdminCalendar({ initialBookings, saveAction, initialDate }: { initialBookings: Booking[], saveAction: (bookings: Booking[]) => Promise<{success: boolean, error?: string}>, initialDate?: string }) {
+    const [currentDate, setCurrentDate] = useState(() => initialDate ? new Date(`${initialDate}T00:00:00`) : new Date());
     const [bookings, setBookings] = useState<Booking[]>(initialBookings || []);
     const [isSaving, setIsSaving] = useState(false);
     

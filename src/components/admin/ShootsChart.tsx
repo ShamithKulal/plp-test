@@ -1,5 +1,7 @@
 "use client";
 
+import { useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
 import {
   BarChart,
   Bar,
@@ -12,12 +14,46 @@ import {
 } from "recharts";
 
 interface ShootsChartProps {
-    data: { month: string, shoots: number }[];
+    bookings: { date: string }[];
 }
 
-export default function ShootsChart({ data }: ShootsChartProps) {
+const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+export default function ShootsChart({ bookings }: ShootsChartProps) {
+    const router = useRouter();
+    const currentYear = new Date().getFullYear();
+    const years = useMemo(() => {
+        const bookingYears = bookings
+            .map((booking) => Number(booking.date.slice(0, 4)))
+            .filter((year) => Number.isInteger(year));
+
+        return Array.from(new Set([currentYear, ...bookingYears])).sort((a, b) => b - a);
+    }, [bookings, currentYear]);
+    const [selectedYear, setSelectedYear] = useState(currentYear);
+    const data = months.map((month, monthIndex) => ({
+        month,
+        monthIndex,
+        shoots: bookings.filter((booking) => booking.date.startsWith(`${selectedYear}-${String(monthIndex + 1).padStart(2, "0")}`)).length
+    }));
+
+    const openMonth = (monthIndex: number) => {
+        router.push(`/admin/bookings?year=${selectedYear}&month=${String(monthIndex + 1).padStart(2, "0")}`);
+    };
+
     return (
-        <div className="w-full h-[300px] text-[12px] font-sans">
+        <div className="w-full text-[12px] font-sans">
+            <div className="flex justify-end mb-2">
+                <label className="sr-only" htmlFor="shoots-year">Shoots year</label>
+                <select
+                    id="shoots-year"
+                    value={selectedYear}
+                    onChange={(event) => setSelectedYear(Number(event.target.value))}
+                    className="bg-transparent border border-[var(--color-border)] rounded-sm px-3 py-2 text-xs text-[var(--color-muted)] focus:outline-none focus:border-gold"
+                >
+                    {years.map((year) => <option key={year} value={year}>{year}</option>)}
+                </select>
+            </div>
+            <div className="w-full h-[270px]">
             <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={data} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                     <defs>
@@ -56,11 +92,14 @@ export default function ShootsChart({ data }: ShootsChartProps) {
                             <Cell 
                                 key={`cell-${index}`} 
                                 fill={entry.shoots > 0 ? "url(#colorShoots)" : "#1a1a2e"} 
+                                cursor="pointer"
+                                onClick={() => openMonth(entry.monthIndex)}
                             />
                         ))}
                     </Bar>
                 </BarChart>
             </ResponsiveContainer>
+            </div>
         </div>
     );
 }
